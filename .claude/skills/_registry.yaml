@@ -1,4 +1,10 @@
 skills:
+  - name: prd-conversational
+    path: prd-conversational
+    description: "交互式 PRD 构建器：通过多轮引导对话探测需求，逐模块确认后输出完整 PRD"
+    trigger: prd-conversational
+    version: "1.0.0"
+
   - name: prd-autofill
     path: prd-autofill
     description: "全自动 PRD 生成器：输入一句话想法，自动补全技术细节，输出可执行 PRD"
