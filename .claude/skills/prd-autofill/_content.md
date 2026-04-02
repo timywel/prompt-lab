@@ -85,7 +85,196 @@
 
 ## 平台知识库
 
-（将在后续任务中填入完整的平台知识库）
+### 3.1 macOS 桌面应用
+
+**语言推荐**: Swift（首选）, Objective-C, Python (scripting only)
+
+**UI 框架选择**:
+- SwiftUI（macOS 12+，现代声明式）
+- AppKit（macOS 全版本，稳定强大）
+- 混合：AppKit 做容器 + SwiftUI 做视图
+
+**必需权限 / Entitlements**:
+```xml
+<key>com.apple.security.device.microphone</key>
+<true/>
+<key>com.apple.security.app-sandbox</key>
+<true/>
+<key>com.apple.security.automation.apple-events</key>
+<true/>
+```
+> 注意：启用 App Sandbox 后，全局 CGEvent tap 需要关闭沙盒或使用 Accessibility API 申请辅助功能权限
+
+**常见系统集成 API**:
+- `CGEventTap` — 全局键盘/鼠标事件监听
+- `NSEvent.addGlobalMonitorForEvents` — 全局事件监控（需辅助功能权限）
+- `NSStatusItem` — 菜单栏图标
+- `NSWorkspace` — App 切换、窗口管理
+- `TISInputSource` — 输入法切换
+- `SFSpeechRecognizer` — 语音识别
+- `AVAudioEngine` — 音频录制与 RMS 分析
+- `NSPanel` — 无边框浮窗（nonactivatingPanel）
+- `NSVisualEffectView` — 毛玻璃效果
+
+**构建工具**: XcodeGen + Swift Package Manager
+
+**分发要求**:
+- LSUIElement = true → 无 Dock 图标，菜单栏应用
+- 代码签名（Development / Distribution）
+- 公证 (Notarization) — macOS 10.15+ 必须
+
+**特殊模式**:
+- LSUIElement: Info.plist 中设置 `LSUIElement = YES`
+- App Sandbox: entitlements 文件
+- Hardened Runtime: 允许受限 API 访问
+
+### 3.2 iOS App
+
+**语言推荐**: Swift（首选）, Objective-C
+
+**UI 框架选择**:
+- SwiftUI（iOS 14+，推荐）
+- UIKit（iOS 全版本，完整控制）
+- SpriteKit / SceneKit（游戏/3D）
+
+**必需权限 (Info.plist)**:
+```xml
+NSMicrophoneUsageDescription — 麦克风
+NSCameraUsageDescription — 相机
+NSPhotoLibraryUsageDescription — 照片库
+NSLocationWhenInUseUsageDescription — 位置
+NSFaceIDUsageDescription — Face ID
+```
+
+**常见系统集成 API**:
+- AVFoundation — 音频/视频录制
+- Speech Framework — 语音识别
+- Vision Framework — 图像分析/OCR
+- Core ML — 机器学习
+- ARKit — AR 功能
+- CoreBluetooth — 蓝牙
+- CoreLocation — GPS
+
+**构建工具**: Xcode + Swift Package Manager / CocoaPods
+
+**App Store 要求**:
+- 应用图标（1024×1024）
+- 截图（多尺寸）
+- 隐私政策 URL
+- 分级（Age Rating）
+
+### 3.3 Android App
+
+**语言推荐**: Kotlin（首选）, Java
+
+**UI 框架选择**:
+- Jetpack Compose（推荐，现代声明式）
+- XML + View（传统）
+
+**必需权限 (AndroidManifest.xml)**:
+```xml
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+```
+
+**常见系统集成 API**:
+- SpeechRecognizer — 语音识别
+- ML Kit — 翻译/OCR/图像标签
+- Firebase — 认证/数据库/推送
+- CameraX — 相机
+- Room — 本地数据库
+
+**构建工具**: Gradle + Android Gradle Plugin
+
+**发布要求**:
+- 签名密钥（debug / release）
+- APK / AAB 格式
+- Google Play Console 上传
+
+### 3.4 Web 应用
+
+**前端框架**:
+- React（生态最全）
+- Vue（上手简单）
+- Svelte（Bundle 最小）
+- Next.js / Nuxt.js（全栈框架）
+
+**UI 组件库**:
+- macOS 风格: Ionica（开源）/ Macos UI
+- iOS 风格: UIKit Svelte / iOS-Components
+- Material: Material Design / Ant Design
+- Tailwind CSS（样式工具）
+
+**常见 Web API**:
+- Web Speech API — 语音识别/合成
+- MediaDevices API — 麦克风/摄像头
+- WebSocket — 实时通信
+- Service Worker — 离线/PWA
+- WebRTC — 点对点通信
+- Clipboard API — 剪贴板
+
+**后端选项**:
+- Node.js + Express / Fastify
+- Python + FastAPI / Django
+- Go + Gin
+- Serverless: Vercel / Cloudflare Workers
+
+**数据库选项**:
+- PostgreSQL（关系型）
+- MongoDB（文档型）
+- Redis（缓存/实时）
+- Supabase / Firebase（后端即服务）
+
+**构建工具**: Vite / Webpack / esbuild
+
+**部署**: Vercel / Netlify / Cloudflare Pages / 自建
+
+### 3.5 CLI 工具
+
+**语言推荐**: Go（跨平台编译简单）/ Rust（性能极致）/ Python（快速脚本）/ Swift（macOS 原生）
+
+**常用库**:
+- Go: cobra / urfave/cli（命令行框架）
+- Rust: clap（命令行解析）
+- Python: click / argparse
+
+**安装方式**:
+- Homebrew: `brew install`
+- npm global: `npm install -g`
+- 直接下载二进制
+
+**构建工具**:
+- Go: `go build`
+- Rust: `cargo build --release`
+- Swift: `swift build`
+
+### 3.6 Chrome Extension
+
+**Manifest V3**（2023年后必需）
+
+**核心文件**:
+- `manifest.json` — 扩展配置
+- `background.js` — 后台脚本
+- `content.js` — 注入到网页的脚本
+- `popup.html/js` — 弹窗 UI
+- `options.html/js` — 设置页面
+
+**常见 API**:
+- `chrome.runtime` — 消息通信
+- `chrome.storage` — 存储
+- `chrome.tabs` — 标签页管理
+- `chrome.tabs.executeScript` — 注入脚本
+- `chrome.commands` — 快捷键
+
+**权限示例**:
+```json
+{
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": ["<all_urls>"]
+}
+```
 
 ---
 
