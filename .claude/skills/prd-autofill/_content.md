@@ -278,6 +278,141 @@ NSFaceIDUsageDescription — Face ID
 
 ---
 
+## 技术选型规则库
+
+### 语音输入技术选型
+
+| 场景 | macOS | iOS | Android | Web |
+|------|-------|-----|---------|-----|
+| 流式语音识别 | `SFSpeechRecognizer` + `AVAudioEngine` | `SFSpeechRecognizer` + `AVAudioEngine` | `SpeechRecognizer` | `webkitSpeechRecognition` |
+| 离线语音识别 | Vosk (via Swift Package) | Vosk / ONNX | Vosk | 不支持 |
+| LLM 语音优化 | OpenAI Whisper API / Claude API | 同左 | 同左 | 同左 |
+| 麦克风权限 | `NSMicrophoneUsageDescription` | 同上 | `RECORD_AUDIO` | `getUserMedia` |
+
+### 数据持久化技术选型
+
+| 场景 | 推荐方案 | 备选 |
+|------|---------|------|
+| 简单配置/状态 | UserDefaults | SharedPreferences |
+| 结构化数据 < 1MB | SQLite.swift | Realm / CoreData |
+| 大规模数据 | PostgreSQL + 后端 | Firebase Firestore |
+| 离线优先 | SQLite + 云端同步 | Realm + Sync |
+
+### 网络通信技术选型
+
+| 场景 | 推荐方案 | 说明 |
+|------|---------|------|
+| REST API 调用 | URLSession (Swift) / Fetch (JS) | 标准方案 |
+| WebSocket 实时 | URLSessionWebSocketTask (macOS 10.15+) | 原生支持 |
+| 流式响应 | AsyncSequence / SSE | 长连接场景 |
+| 文件上传/下载 | URLSession downloadTask | 大文件支持 |
+| API 鉴权 | Bearer Token / API Key | 根据后端要求 |
+
+### 文本注入技术选型（桌面应用）
+
+| 平台 | 方案 | 说明 |
+|------|------|------|
+| macOS | 剪贴板 + `CGEvent` 模拟 Cmd+V | 需辅助功能权限 |
+| macOS | `NSPasteboard` + Accessibility | 备用方案 |
+| Electron | `clipboard.writeText` + `robotjs` | 跨平台 |
+| iOS | 无法实现（沙盒限制） | 可用 Share Extension |
+| Android | AccessibilityService + InputMethodManager | 需特殊权限 |
+
+### 输入法处理策略（CJK输入）
+
+当检测到目标 App 使用 CJK（中日韩）输入法时：
+1. 注入前：保存剪贴板内容
+2. 注入前：切换到 ASCII 输入源（如 ABC / US Keyboard）
+3. 执行粘贴（Cmd+V / Ctrl+V）
+4. 注入后：恢复原始输入源
+5. 注入后：恢复剪贴板内容
+
+macOS 实现：使用 `TISInputSource` API 遍历可用的输入源，找到 `kTISCategoryKeyboardInputSource` 类别中 ID 为 `com.apple.keylayout.ABC` 或 `com.apple.keylayout.US` 的源并切换。
+
+---
+
+## 量化参数生成器
+
+### 性能指标默认值
+
+根据功能类型，自动填充以下性能指标（如用户未指定）：
+
+| 指标类型 | 默认值 | 说明 |
+|---------|-------|------|
+| 启动时间 | < 2s | 从点击图标到可交互 |
+| 首次响应 | < 500ms | 用户操作到视觉反馈 |
+| 语音识别延迟 | < 300ms | 说话结束到文字出现 |
+| API 响应超时 | 10s | 外部 API 调用 |
+| 内存占用（移动） | < 100MB | 正常运行峰值 |
+| 内存占用（桌面） | < 200MB | 正常运行峰值 |
+| 包体积（iOS） | < 50MB | App Store 上传 |
+| 包体积（macOS） | < 100MB | 直接分发 |
+| 电池影响 | < 5%/小时 | 后台持续运行 |
+
+### UI 量化默认值
+
+| 组件类型 | 参数 |
+|---------|------|
+| 按钮高度 | macOS: 22px, iOS: 44px (tap target), Android: 48dp |
+| 图标尺寸 | 16×16 (toolbar), 24×24 (content), 32×32 (list) |
+| 圆角 | 按钮: 8px, 卡片: 12px, 浮窗: 16-28px |
+| 间距基数 | 8px（所有间距为此值的倍数） |
+| 浮窗高度 | 菜单项: 36px, 通知: 56px, 模态: 动态 |
+| 动画时长 | 微交互: 150ms, 视图切换: 300ms, 复杂动画: 500ms |
+| 动画缓动 | 标准: ease-in-out, 弹簧效果: spring(damping: 0.7) |
+
+### 兼容性默认值
+
+| 平台 | 默认最低版本 |
+|------|------------|
+| macOS | macOS 12 (Monterey) |
+| iOS | iOS 16 |
+| Android | API 24 (Android 7.0), Target: API 34 |
+| Web | 最近2个 Chrome/Firefox/Safari 版本 |
+| Chrome Extension | Manifest V3, Chrome 88+ |
+
+---
+
+## 反面案例库
+
+### 通用反面案例
+
+| 功能 | 错误做法 | 正确做法 |
+|------|---------|---------|
+| 动画 | hardcoded 假动画，数据和动画脱节 | 用真实 RMS 驱动波形，音频参数映射到视觉参数 |
+| 网络请求 | 假设网络总是可用 | 优雅降级：离线模式 + 重试机制 + 用户提示 |
+| 异步操作 | 在主线程执行耗时操作 | 使用 GCD / async-await / Worker |
+| 权限 | 不处理权限拒绝或未请求 | 清晰解释为什么需要权限，提供替代方案 |
+| 敏感数据 | 日志中打印敏感信息 | 使用模糊化日志，敏感字段打码 |
+| 剪贴板 | 不保存原有剪贴板内容 | 先保存，注入后恢复 |
+| CJK 输入法 | 直接粘贴，不切换输入法 | 检测输入法类型，必要时切换到 ASCII 后再粘贴 |
+| 全局热键 | 冲突检测缺失 | 注册前检查是否已被占用，冲突时提示用户 |
+
+### macOS 特定反面案例
+
+- ❌ **不要**在 App Sandbox 开启时尝试使用 `CGEventTap`（会被拒绝），申请 Accessibility 权限或关闭沙盒
+- ❌ **不要**使用 `NSTimer` 驱动波形动画（不精确），使用 `CADisplayLink` 或 `CVDisplayLink`
+- ❌ **不要**假设只有一种输入法，中文用户可能用搜狗/百度/系统拼音
+- ❌ **不要**在非激活 Panel 中处理键盘事件（`NSPanel` 的 `makeFirstResponder` 行为不同）
+- ❌ **不要**在后台持续录音而不释放麦克风资源（会导致其他 App 无法使用麦克风）
+
+### iOS 特定反面案例
+
+- ❌ **不要**使用私有 API（App Store 会拒绝）
+- ❌ **不要**在后台持续录音（系统会强制终止，需要申请 `audio` background mode）
+- ❌ **不要**假设设备有刘海屏，提供 safe area 适配
+- ❌ **不要**忽略 `Info.plist` 中的 usage description，权限请求前必须填写
+
+### Web 特定反面案例
+
+- ❌ **不要**假设 `getUserMedia` 在所有浏览器都支持（必须检查 Feature Detection）
+- ❌ **不要**在生产环境使用 `console.log` 输出敏感信息
+- ❌ **不要**将 API Key 直接写在前端代码中（使用后端代理或环境变量）
+- ❌ **不要**忽略 CORS 策略，API 调用必须处理跨域
+- ❌ **不要**使用 `alert()` 作为用户通知（阻塞 UI），使用 toast/notification
+
+---
+
 ## 标准 PRD 模板
 
 （将在后续任务中填入完整的 PRD 模板）
