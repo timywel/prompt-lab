@@ -1,0 +1,6 @@
+skills:
+  - name: prd-autofill
+    path: prd-autofill
+    description: "全自动 PRD 生成器：输入一句话想法，自动补全技术细节，输出可执行 PRD"
+    trigger: prd
+    version: "1.0.0"
