@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  macOS Info.plist 配置模板
+  来源: expanded-macos-voice-input-prd.md
+  用途: macOS 菜单栏语音输入 App (LSUIElement)
+
+  使用说明:
+  1. 将 {{APP_NAME}} 替换为实际应用名称
+  2. 将 {{BUNDLE_IDENTIFIER}} 替换为实际的 Bundle Identifier
+  3. 将 {{MICROPHONE_DESCRIPTION}} 替换为实际麦克风权限描述
+  4. 将 {{VERSION}} 替换为当前版本号
+  5. 将 {{BUILD}} 替换为构建号
+-->
+<plist version="1.0">
+<dict>
+    <!-- 基础信息 -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>zh_CN</string>
+    <key>CFBundleDisplayName</key>
+    <string>{{APP_NAME}}</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>{{BUNDLE_IDENTIFIER}}</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>{{VERSION}}</string>
+    <key>CFBundleVersion</key>
+    <string>{{BUILD}}</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+
+    <!-- LSUIElement: 菜单栏应用，无 Dock 图标 -->
+    <key>LSUIElement</key>
+    <true/>
+
+    <!-- 应用分类 -->
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.productivity</string>
+
+    <!-- 麦克风权限 (语音输入核心依赖) -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>{{MICROPHONE_DESCRIPTION}}</string>
+
+    <!-- 语音识别权限 (Speech Framework) -->
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>此 App 需要语音识别权限来将您的语音转换为文字，以便注入到当前焦点应用。</string>
+
+    <!-- Accessibility 权限 (CGEventTap 全局事件监听) -->
+    <!-- 注意: Accessibility 权限通过 AXIsProcessTrusted() 在运行时请求 -->
+    <!-- 不需要在 Info.plist 中声明，但用户首次使用时需要引导授权 -->
+
+    <!-- 隐私策略 URL (App Store 或官网展示) -->
+    <key>NSPrivacyPolicyURL</key>
+    <string>https://example.com/privacy</string>
+    <key>NSPrivacyPolicyType</key>
+    <string>NSPrivacyPolicyTypeThirdParty</string>
+
+    <!-- 隐私采集清单 (macOS 13+ 要求) -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyCollectedDataType</key>
+            <string>NSPrivacyCollectedDataTypeUserInputErrors</string>
+            <key>NSPrivacyCollectedDataTypePurpose</key>
+            <string>此应用不采集任何用户数据，所有语音处理均在本地完成。</string>
+        </dict>
+    </array>
+
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- 网络 (可选: LLM 增强功能) -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+        <key>NSAllowsArbitraryLoadsForMedia</key>
+        <false/>
+        <key>NSAllowsArbitraryLoadsInWebContent</key>
+        <false/>
+    </dict>
+
+    <!-- 本地化支持 -->
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>zh_CN</string>
+        <string>en</string>
+    </array>
+
+    <!-- 启动画面 (可选) -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <!-- 文档支持 (如果需要打开特定文件类型) -->
+    <!--
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeName</key>
+            <string>Text File</string>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSHandlerRank</key>
+            <string>Alternate</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>public.plain-text</string>
+            </array>
+        </dict>
+    </array>
+    -->
+
+    <!-- 辅助功能 - VoiceOver 支持 -->
+    <key>NSAccessibilityUsageDescription</key>
+    <string>此 App 需要辅助功能权限以支持 VoiceOver 屏幕阅读器。</string>
+
+    <!-- 兼容性 -->
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2026 {{COMPANY_NAME}}. All rights reserved.</string>
+
+    <!-- 签名配置 -->
+    <key>CodeSignIdentity</key>
+    <string>Developer ID Application</string>
+    <key>IdentifierForVendor</key>
+    <string>{{BUNDLE_IDENTIFIER}}</string>
+</dict>
+</plist>

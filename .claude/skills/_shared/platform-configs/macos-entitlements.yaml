@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  macOS Entitlements 配置模板
+  来源: expanded-macos-voice-input-prd.md
+  用途: macOS 菜单栏语音输入 App
+
+  重要说明:
+  - App Sandbox: 必须关闭 (NO)，因为 CGEventTap 需要 Accessibility 权限
+    App Sandbox 与 Accessibility 不兼容。详见反面案例:
+    "不要在 App Sandbox 开启时尝试使用 CGEventTap — 会被拒绝，必须关闭沙盒或申请 Accessibility 权限"
+  - Hardened Runtime: 必须开启，用于公证 (Notarization) 和安全性
+  - 使用 Developer ID 签名时，Entitlements 中的 Keychain Access Groups 可能需要调整
+
+  使用说明:
+  1. 将 {{TEAM_ID}} 替换为 Apple Developer Team ID
+  2. 将 {{BUNDLE_IDENTIFIER}} 替换为实际的 Bundle Identifier
+-->
+<plist version="1.0">
+<dict>
+    <!-- ==================== 核心安全配置 ==================== -->
+
+    <!-- App Sandbox: 必须关闭 (NO) -->
+    <!-- CGEventTap 需要 Accessibility 权限，与 App Sandbox 不兼容 -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+
+    <!-- Hardened Runtime: 必须开启 -->
+    <!-- 允许应用使用系统敏感 API，是公证 (Notarization) 的前提 -->
+    <key>com.apple.security.hardened-runtime</key>
+    <true/>
+
+    <!-- ==================== Automation 权限 ==================== -->
+    <!-- 允许向其他应用发送 Apple Events (模拟 Cmd+V 粘贴) -->
+    <!-- 注意: 需要在运行时额外授权，Hardened Runtime 只是声明意图 -->
+    <key>com.apple.security.automation.apple-events</key>
+    <true/>
+
+    <!-- ==================== 文件系统权限 ==================== -->
+    <!-- 允许读写用户选定的文件 (用于配置文件的导入导出) -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+
+    <!-- 允许访问用户 Downloads 目录 -->
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+
+    <!-- ==================== 网络权限 ==================== -->
+    <!-- 允许网络连接 (可选: LLM 增强功能的 Whisper API 调用) -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- ==================== 设备权限 ==================== -->
+    <!-- 允许访问麦克风 (语音输入) -->
+    <!-- 注意: 麦克风权限同时需要在 Info.plist 中声明 NSMicrophoneUsageDescription -->
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+
+    <!-- ==================== 辅助功能 (非沙盒权限) ==================== -->
+    <!--
+      Accessibility 权限通过运行时请求，不通过 Entitlements 文件配置。
+      使用 AXIsProcessTrusted() 检查，AXIsProcessTrustedWithOptions() 触发授权弹窗。
+      用户需要前往: 系统偏好设置 > 隐私与安全性 > 辅助功能 > 授权本应用
+
+      应用启动时的引导流程:
+      1. 检查 AXIsProcessTrusted() 返回值
+      2. 若为 false，显示引导界面
+      3. 调用 AXIsProcessTrustedWithOptions(
+             [kAXTrustedCheckOptionPrompt: true] as CFDictionary
+           )
+      4. 等待用户授权后继续
+    -->
+
+    <!-- ==================== Keychain 访问 (可选) ==================== -->
+    <!--
+    <key>keychain-access-groups</key>
+    <array>
+        <string>({{TEAM_ID}}).{{BUNDLE_IDENTIFIER}}</string>
+    </array>
+    -->
+
+    <!-- ==================== 应用程序组 (可选) ==================== -->
+    <!--
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.{{BUNDLE_IDENTIFIER}}</string>
+    </array>
+    -->
+
+    <!-- ==================== 代码签名配置 ==================== -->
+    <!--
+      代码签名命令示例 (使用 Developer ID):
+      codesign --sign "Developer ID Application: {{COMPANY_NAME}} ({{TEAM_ID}})" \
+                 --options runtime \
+                 --entitlements VoiceInput.entitlements \
+                 VoiceInput.app
+
+      公证命令示例:
+      xcrun notarytool submit VoiceInput.zip \
+            --apple-id "{{APPLE_ID}}" \
+            --team-id "{{TEAM_ID}}" \
+            --password "{{APP_SPECIFIC_PASSWORD}}" \
+            --wait
+
+      附加 ticket:
+      xcrun stapler staple VoiceInput.app
+    -->
+
+    <!-- ==================== 调试配置 (仅 Debug 构建) ==================== -->
+    <!--
+    <key>com.apple.security.get-task-allow</key>
+    <true/>
+    -->
+</dict>
+</plist>
