@@ -526,6 +526,103 @@ macOS 实现：使用 `TISInputSource` API 遍历可用的输入源，找到 `kT
 - 如果需要追问 → 补充更多细节
 - 具体标准：每个功能必须包含**核心 API 名称** + **具体触发方式** + **步骤化的处理流程**
 
+补充说明：完整自检请参考 `../_shared/qa-checks/self-review-checklist.md` 中的 13 项逐条检查清单。
+
+---
+
+## 测试策略
+
+生成的 PRD 应包含完整的测试策略章节，引用 test-pyramid-template.md 的三层金字塔模型。
+
+### 测试金字塔
+
+```yaml
+TestPyramid:
+  E2E:
+    ratio: "10%"
+    覆盖场景: "关键用户路径（录音→识别→注入）"
+  Integration:
+    ratio: "30%"
+    覆盖场景: "模块间交互（AudioEngine → SpeechRecognizer）"
+  Unit:
+    ratio: "60%"
+    覆盖场景: "每个模块的核心逻辑"
+```
+
+### 平台特定测试场景
+
+| 模块 | 单元测试（每模块 3-5 个用例） | 集成测试 | E2E 测试 |
+|------|-----------------------------|---------|---------|
+| App/入口 | 启动参数解析 / 参数校验 / 环境检测 | 多平台启动流程 | 完整启动到就绪路径 |
+| Core/Audio | 正常录音 / 无麦克风权限 / 音频中断 / 静音检测 | AudioEngine → SpeechRecognizer 数据流 | 按住热键 → 录音 → 识别 → 注入 |
+| Core/Speech | 正常识别 / 网络不可用 / 无语音权限 / 空音频 | SpeechRecognizer → LLMRefiner 调用链 | 语音输入 → 文本注入目标应用 |
+| Core/LLM | 正常响应 / 超时 / API 错误 / 空输入 / 限流处理 | LLMRefiner → FloatingWindow 输出 | 长文本 → LLM 优化 → 注入 |
+| UI/Floating | 出现动画 / 消失动画 / 多屏幕适配 / 窗口层级 | FloatingWindow → WaveformView 联动 | 浮窗显示 → 波形动画 → 隐藏 |
+| InputMethod | 检测 CJK 输入法 / 切换到 ASCII / 恢复原输入法 | InputSourceSwitcher → TextInjector 协同 | 切换输入法 → 注入 → 恢复输入法 |
+| Settings | 配置读写 / 默认值填充 / 迁移逻辑 | Settings → Core 各模块配置注入 | 修改设置 → 验证生效 |
+| Utils | 日志写入 / 权限请求 / 剪贴板存取 | 跨模块工具调用 | 工具函数全链路 |
+
+> 注意：具体测试用例数量和覆盖范围应根据用户选择的"测试要求"（Q14）进行调整。MVP 场景可简化为仅保留 E2E 关键路径测试。
+
+---
+
+## 架构设计
+
+生成的 PRD 应包含简化的模块划分章节，每个模块应有明确的职责定义和依赖关系。
+
+### 模块划分（6 个子目录）
+
+```
+[AppName]/
+├── App/                    # 应用入口和生命周期
+│   ├── main.swift          # 应用入口
+│   ├── AppDelegate.swift   # 生命周期管理
+│   └── AppState.swift      # 全局状态管理
+├── Core/                   # 核心业务逻辑（按功能域划分）
+│   ├── Audio/              # 音频采集（AVAudioEngine / Web Audio API）
+│   ├── Speech/             # 语音识别（SFSpeechRecognizer / Web Speech API）
+│   ├── LLM/                # LLM 优化（OpenAI / Claude / 本地模型）
+│   └── Text/               # 文本处理和注入
+├── UI/                     # 视图层（所有 UI 组件）
+│   ├── FloatingWindow/     # 浮窗/覆盖层（macOS: NSPanel / iOS: UIPresentationController）
+│   ├── WaveformView/        # 波形动画组件
+│   └── StatusMenu/         # 菜单栏/状态栏组件
+├── InputMethod/            # 系统集成层（输入法相关）
+│   ├── InputSourceSwitcher.swift   # 输入法切换（TISInputSource）
+│   └── TextInjector.swift          # 文本注入（CGEvent / Accessibility）
+├── Settings/               # 配置管理层
+│   ├── UserPreferences.swift      # 配置读写（UserDefaults）
+│   └── SettingsView.swift          # 设置界面
+└── Utils/                  # 工具层（跨模块复用）
+    ├── Logger.swift              # 日志工具
+    ├── PermissionManager.swift   # 权限请求和管理
+    └── ClipboardManager.swift    # 剪贴板管理
+```
+
+### 模块依赖关系
+
+| 模块 | 直接依赖 | 被依赖 |
+|------|---------|-------|
+| App | Core, UI, Settings | - |
+| Core/Audio | Utils/PermissionManager | UI/WaveformView, Core/Speech |
+| Core/Speech | Core/Audio | UI/FloatingWindow, Core/LLM |
+| Core/LLM | Utils/Logger | UI/FloatingWindow |
+| Core/Text | InputMethod/TextInjector | - |
+| UI/FloatingWindow | Core/Audio, Core/Speech | - |
+| UI/WaveformView | Core/Audio | - |
+| InputMethod/TextInjector | InputMethod/InputSourceSwitcher | - |
+| InputMethod/InputSourceSwitcher | Utils/ClipboardManager | - |
+| Settings | App/AppState | App |
+
+### 依赖原则
+
+- **禁止反向依赖**：下层模块不得依赖上层模块（如 Core 不得依赖 UI）
+- **单向依赖传递**：如需跨层访问，通过接口/协议解耦
+- **Utils 层零依赖**：Utils 模块不得依赖任何其他业务模块
+- **数据流单向**：用户输入 → Core 处理 → UI 展示，禁止 UI 层直接修改 Core 数据
+
+> 注意：对于非 macOS/iOS 平台，模块名称和路径应替换为对应平台的等价实现（如 Core/Audio → AudioEngine）。
+
 ---
 
 ## 协调层执行伪代码

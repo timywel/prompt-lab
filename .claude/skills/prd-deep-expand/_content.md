@@ -268,21 +268,127 @@ clean:
 
 #### CI/CD 流程
 
-为初步 PRD 补充 CI/CD 流程：
+为初步 PRD 补充 CI/CD 流程。macOS/iOS 项目使用以下 GitHub Actions 工作流模板（**注意**：GitHub Actions 中引用 secrets 必须使用 `${{ secrets.VARIABLE_NAME }}` 格式，单个 `$` + 双花括号，切勿写成 `$${{ secrets }}`）：
 
 ```yaml
-CI/CD Pipeline:
-  on_push:
-    - lint: 运行代码规范检查
-    - test: 运行单元测试 + 集成测试
-    - build: 编译 Release 版本
-    - security_scan: 依赖安全扫描
-  on_merge:
-    - build: Release 构建
-    - sign: 代码签名
-    - notarize: macOS 公证（如适用）
-    - deploy: 部署到分发渠道
+name: macOS CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+  SWIFT_VERSION: "5.9"
+
+jobs:
+  # ── 代码质量检查 ──
+  lint:
+    name: Swift Lint
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: SwiftLint
+        run: |
+          if which swiftlint >/dev/null; then
+            swiftlint lint --config .swiftlint.yml
+          else
+            echo "swiftlint 未安装，跳过 lint"
+          fi
+
+  # ── 单元测试 + 集成测试 ──
+  test:
+    name: Test
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Resolve packages
+        run: xcodebuild -resolvePackageDependencies -project [AppName].xcodeproj -scheme [AppName]
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -project [AppName].xcodeproj \
+            -scheme [AppName] \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -enableCodeCoverage YES
+
+  # ── Release 构建 ──
+  build:
+    name: Build
+    runs-on: macos-14
+    needs: [lint, test]
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate Xcode project
+        run: xcodegen generate
+      - name: Build Release
+        run: |
+          xcodebuild build \
+            -project [AppName].xcodeproj \
+            -scheme [AppName] \
+            -configuration Release
+
+  # ── 发布流程（仅 release tag 或 merge 到 main）─────────────
+  release:
+    name: Release & Notarize
+    runs-on: macos-14
+    needs: [lint, test]
+    if: github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build Release
+        run: |
+          xcodebuild build \
+            -project [AppName].xcodeproj \
+            -scheme [AppName] \
+            -configuration Release
+
+      - name: Code Sign
+        run: |
+          codesign --force --sign "${{ secrets.APPLE_SIGNING_ID }}" \
+            --options runtime --deep \
+            build/[AppName].app
+
+      - name: Package
+        run: |
+          cd build
+          zip -r [AppName].zip [AppName].app
+          cd ..
+
+      - name: Notarize
+        run: |
+          xcrun notarytool submit build/[AppName].zip \
+            --apple-id "${{ secrets.APPLE_ID }}" \
+            --team-id "${{ secrets.APPLE_TEAM_ID }}" \
+            --password "${{ secrets.APPLE_APP_PASSWORD }}" \
+            --wait
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+
+      - name: Staple
+        run: xcrun stapler staple build/[AppName].zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/[AppName].zip
 ```
+
+> **重要提醒**：GitHub Actions 语法中，`${{ secrets.VARIABLE_NAME }}` 使用单个 `$` 符号。Makefile 中的 shell 变量使用 `$(VAR)`。两者切勿混淆。
 
 #### 部署策略
 
@@ -374,6 +480,23 @@ TestPyramid:
     - "Clipboard API: 跨域限制"
     - "Service Worker: 缓存策略"
 ```
+
+#### E2E 测试具体场景（5-8 个）
+
+每个 E2E 测试场景应包含：前置条件、操作步骤、预期结果。以下为推荐的 E2E 测试场景模板：
+
+| # | 场景名称 | 前置条件 | 操作步骤 | 预期结果 |
+|---|---------|---------|---------|---------|
+| 1 | 录音→识别→注入（主路径） | 目标 App 在前台运行，麦克风已授权 | 按住 Fn 键 → 说话 → 松开 Fn | 识别文本自动注入到目标 App 光标处 |
+| 2 | CJK 输入法环境注入 | 系统输入法为搜狗/百度拼音，目标 App 为文本编辑器 | 切换到中文输入法 → 按住 Fn → 说中文 → 松开 | 自动切换到 ASCII 输入源 → 注入中文文本 → 恢复中文输入法 |
+| 3 | 无麦克风权限优雅降级 | 未授予麦克风权限 | 尝试启动录音 | 显示权限引导弹窗，提供"去设置"按钮 |
+| 4 | 语音识别失败重试 | 网络连接不稳定 | 按住 Fn → 说话 → 松开（网络中断） | 显示"网络不稳定，请重试"提示，不崩溃 |
+| 5 | 长时间录音（边界） | App 正常运行 | 按住 Fn 持续说话 5 分钟 | 录音自动截断（按预设最大时长），返回已识别文本 |
+| 6 | LLM 优化正常流程 | 网络正常，LLM API 可用 | 按住 Fn → 说一段话 → 松开 | 返回 LLM 优化后的文本（如启用优化） |
+| 7 | LLM 超时降级 | LLM API 无响应（超时） | 启用 LLM 优化 → 网络中断 | 自动降级为原始识别文本，不阻塞注入 |
+| 8 | 多屏幕环境浮窗显示 | Mac 连接外接显示器 | 在外接显示器上的 App 中触发语音输入 | 浮窗出现在正确屏幕上，不闪退 |
+
+> 说明：具体场景数量和内容应根据初步 PRD 的实际功能选择。MVP 场景至少保留场景 1（主路径）和场景 3（权限降级）。
 
 #### 性能测试指标
 
@@ -551,7 +674,8 @@ DataMigration:
 ## 6. 测试策略扩展 ← [维度4]
 ### 6.1 测试金字塔
 ### 6.2 平台特定测试场景
-### 6.3 性能测试指标
+### 6.3 E2E 测试具体场景（5-8 个）
+### 6.4 性能测试指标
 
 ## 7. 边界条件扩展 ← [维度5]
 ### 7.1 边界条件矩阵
@@ -565,6 +689,70 @@ DataMigration:
 
 ## 9. 冲突记录（如有）
 [所有发现的冲突及解决方案]
+
+## 10. 用户价值
+
+### 10.1 目标用户画像
+
+根据初步 PRD 的功能描述，自动推断并生成 3 种典型用户画像：
+
+| 用户类型 | 描述 | 核心痛点 | 使用频率 |
+|---------|------|---------|---------|
+| **类型A：高效办公用户** | 长时间在电脑前工作，需频繁输入文字 | 打字速度跟不上思维，手腕疲劳（Carpal Tunnel） | 高频（每天多次）|
+| **类型B：移动办公用户** | 外出时通过手机/平板处理工作 | 手机输入法效率低，无法双手操作 | 中频（外出时）|
+| **类型C：特殊需求用户** | 存在肢体障碍或手部功能受限 | 传统键盘/触摸输入困难 | 高频（作为主要输入方式）|
+
+### 10.2 用户场景故事（3-5 个）
+
+使用"用户 → 场景 → 目标 → 障碍 → 解决方案"格式描述：
+
+**场景 1（主场景）**：
+> **用户**：类型A 高效办公用户（软件工程师）
+> **场景**：正在编写代码，需要在 Slack 中回复团队消息
+> **目标**：快速将想法转成文字，不中断键盘操作流
+> **障碍**：切换到窗口 → 点击输入框 → 打字 → 发送，整个流程需要 10-15 秒
+> **解决方案**：按住 Fn → 说"看起来没问题，我来 review" → 松开 → 文字自动注入 → 按 Enter
+
+**场景 2（分心恢复）**：
+> **用户**：类型A
+> **场景**：正在写作，突然有灵感闪现
+> **目标**：在灵感消失前快速记录
+> **障碍**：打字速度跟不上思维，且打字会打断写作心流
+> **解决方案**：按住 Fn → 快速说出想法 → 松开 → 文本注入当前文档
+
+**场景 3（移动场景）**：
+> **用户**：类型B 移动办公用户（销售）
+> **场景**：在地铁上收到客户紧急需求
+> **目标**：快速回复详细的处理方案
+> **障碍**：手机小屏幕打字效率极低，无法双手操作
+> **解决方案**：使用手机语音输入 → 语音识别 → 自动格式化 → 发送
+
+**场景 4（无障碍场景）**：
+> **用户**：类型C 特殊需求用户（手部功能受限）
+> **场景**：日常工作中需要频繁文字沟通
+> **目标**：将文字输入从 60 字/分钟 提升到接近口语速度
+> **障碍**：键盘操作困难，每次击键都需要精细手指控制
+> **解决方案**：全程使用语音输入，配合 VoiceOver 朗读确认，消除键盘依赖
+
+**场景 5（多语言场景）**：
+> **用户**：类型A（跨国团队成员）
+> **场景**：需要用英语回复技术文档讨论
+> **目标**：用英语准确表达技术概念
+> **障碍**：英语口语流利但写作时容易出现语法错误
+> **解决方案**：语音输入 → LLM 语法/表达优化 → 注入文本 → 减少写作焦虑
+
+### 10.3 竞品对比
+
+| 维度 | macOS 内置听写 | Dragon Professional | Otter.ai | **本产品** |
+|------|--------------|--------------------|---------|-----------|
+| 全局快捷键触发 | ❌ 需手动切换 | ❌ 需激活窗口 | ❌ 需打开 App | ✅ 全局热键，随时可用 |
+| 菜单栏常驻 | ❌ | ❌ | ❌ | ✅ 轻量级菜单栏 App |
+| LLM 文本优化 | ❌ | ❌ | ✅ AI 辅助 | ✅ 可选 LLM 优化 |
+| CJK 输入法支持 | ⚠️ 一般 | ❌ | ❌ | ✅ 完整支持 |
+| 文本注入（非本 App） | ❌ | ❌ | ❌ | ✅ 注入到任意 App |
+| 价格 | 免费（系统内置）| 昂贵（$500+/年） | $10-20/月 | 待定 |
+| 离线模式 | ✅ | ✅ | ❌ | 计划支持 |
+
 ```
 
 ### 保存位置
