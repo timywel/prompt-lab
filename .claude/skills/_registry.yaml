@@ -1,14 +1,14 @@
 skills:
-  - name: prd-conversational
-    path: prd-conversational
-    description: "交互式 PRD 构建器：通过多轮引导对话探测需求，逐模块确认后输出完整 PRD"
-    trigger: prd-conversational
-    version: "1.0.0"
-
   - name: prd-autofill
     path: prd-autofill
     description: "全自动 PRD 生成器：输入一句话想法，自动补全技术细节，输出可执行 PRD"
     trigger: prd
+    version: "1.0.0"
+
+  - name: prd-conversational
+    path: prd-conversational
+    description: "交互式 PRD 构建器：通过多轮引导对话探测需求，逐模块确认后输出完整 PRD"
+    trigger: prd-conversational
     version: "1.0.0"
 
   - name: prd-deep-expand
@@ -19,8 +19,15 @@ skills:
 
   - name: prd-orchestrator
     path: prd-orchestrator
-    description: "PRD 生成协调层：分析复杂度，智能路由，自动串联三个方案"
+    description: "PRD 生成协调层：分析输入复杂度，智能路由，自动串联方案A/B/C"
     trigger: prd-orchestrator
+    version: "1.0.0"
+    autoActivate: false
+
+  - name: prd-qa
+    path: prd-qa
+    description: "PRD 质检与修复：自动审查 + 修复常见问题 + 质量报告"
+    trigger: prd-qa
     version: "1.0.0"
     autoActivate: false
 
@@ -28,4 +35,16 @@ skills:
     path: prd-review-panel
     description: "PRD 评审团：自动调度6维度评审，聚合评分，输出综合报告"
     trigger: prd-review-panel
+    version: "1.0.0"
+
+  - name: prd-security-analysis
+    path: prd-security-analysis
+    description: "PRD 安全分析扩展：为 PRD 自动补充威胁建模、隐私合规、数据加密、API 鉴权、安全测试等安全章节。自动触发：PRD 涉及登录/支付/用户数据/加密等功能时。"
+    trigger: prd-security-analysis
+    version: "1.0.0"
+
+  - name: prd-performance-profile
+    path: prd-performance-profile
+    description: "PRD 性能剖析扩展：为 PRD 自动补充性能测试计划、平台性能剖析工具指南、基准指标、回归检测等性能分析章节。自动触发：PRD 涉及实时/音视频/游戏/高性能需求时。"
+    trigger: prd-performance-profile
     version: "1.0.0"

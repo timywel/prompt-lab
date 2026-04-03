@@ -1,8 +1,0 @@
-name: prd-qa
-version: "1.0.0"
-description: "PRD 质检与修复：自动审查 + 修复常见问题 + 质量报告"
-triggers:
-  - prd-qa
-  - 审查PRD
-  - 检查PRD质量
-author: Claude Code Agent

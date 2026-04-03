@@ -1,6 +1,0 @@
-skills:
-  - name: prd-review-panel
-    path: prd-review-panel
-    description: "PRD 评审团：自动调度6维度评审，聚合评分，输出综合报告"
-    trigger: prd-review-panel
-    version: "1.0.0"

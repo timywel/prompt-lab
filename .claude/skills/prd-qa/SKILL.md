@@ -1,3 +1,16 @@
+---
+name: prd-qa
+description: "PRD 质检与修复：自动审查 + 修复常见问题 + 质量报告"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd-qa
+    - 审查PRD
+    - 检查PRD质量
+  author: Claude Code Agent
+---
+
 # PRD-QA: PRD 质检与修复
 
 自动审查 PRD 输出，修复常见问题，输出质量报告。
@@ -406,7 +419,7 @@
 检测用户描述中的自相矛盾：
 
 | 冲突类型 | 检测模式 | 警告 |
-|---------|---------|------|
+|---------|---------|---------|
 | 离线 + AI服务 | "离线"+"AI"+"LLM"+"网络" | 🔴 冲突：AI服务需要网络，离线AI需本地模型 |
 | App Store + CGEventTap | "App Store"+"CGEvent" | 🔴 冲突：CGEventTap需要关闭沙盒，无法上架App Store |
 | 小体积 + 复杂功能 | "<10MB"+"AI"+"离线地图" | 🟡 警告：功能复杂度可能超出体积限制 |

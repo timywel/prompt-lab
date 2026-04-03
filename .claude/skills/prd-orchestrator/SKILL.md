@@ -1,3 +1,17 @@
+---
+name: prd-orchestrator
+description: "PRD 生成协调层：分析输入复杂度，智能路由，自动串联方案A/B/C"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd-orchestrator
+    - 生成PRD
+    - 帮我写PRD
+    - 写一个PRD
+  author: Claude Code Agent
+---
+
 # PRD-Orchestrator: PRD 生成协调层
 
 ## 定位

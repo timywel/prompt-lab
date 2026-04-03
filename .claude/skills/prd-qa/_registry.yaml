@@ -1,7 +1,0 @@
-skills:
-  - name: prd-qa
-    path: prd-qa
-    description: "PRD 质检与修复：自动审查生成后的 PRD，修复常见问题，输出质量报告"
-    trigger: prd-qa
-    version: "1.0.0"
-    autoActivate: false

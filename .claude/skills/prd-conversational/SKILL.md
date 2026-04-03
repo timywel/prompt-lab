@@ -1,3 +1,17 @@
+---
+name: prd-conversational
+description: "交互式 PRD 构建器：通过多轮引导对话探测需求，逐模块确认后输出完整 PRD"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd-conversational
+    - 对话式PRD
+    - 引导生成PRD
+    - 交互式需求文档
+  author: Claude Code Agent
+---
+
 # PRD 交互式对话构建器
 
 通过多轮引导对话（14个问题分4个阶段），探测用户需求，逐模块确认后输出完整 PRD。

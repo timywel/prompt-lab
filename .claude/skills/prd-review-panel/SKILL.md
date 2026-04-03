@@ -1,3 +1,17 @@
+---
+name: prd-review-panel
+description: "PRD 评审团：自动调度6维度评审，聚合评分，输出综合报告"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd-review-panel
+    - 评审PRD
+    - PRD打分
+    - 评审打分
+  author: Claude Code Agent
+---
+
 # PRD 评审团 Skill
 
 ## 激活条件

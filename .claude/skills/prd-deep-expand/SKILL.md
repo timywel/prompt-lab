@@ -1,3 +1,17 @@
+---
+name: prd-deep-expand
+description: "深度扩展型 PRD 生成器：从初步PRD扩展架构/UI/UX/工程化/测试/边界/运维六个维度"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd-deep-expand
+    - 深度扩展PRD
+    - 扩展需求文档
+    - 深化PRD
+  author: Claude Code Agent
+---
+
 # PRD 深度扩展生成器
 
 用户已有初步 PRD（如粗略的功能列表或半成品规格），从六个维度进行深度扩展，输出完整的可执行 PRD。

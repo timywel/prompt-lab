@@ -1,9 +1,0 @@
-name: prd-conversational
-version: "1.0.0"
-description: "交互式 PRD 构建器：通过多轮引导对话探测需求，逐模块确认后输出完整 PRD"
-triggers:
-  - prd-conversational
-  - 对话式PRD
-  - 引导生成PRD
-  - 交互式需求文档
-author: Claude Code Agent

@@ -1,7 +1,0 @@
-skills:
-  - name: prd-orchestrator
-    path: prd-orchestrator
-    description: "PRD 生成协调层：分析复杂度，智能路由，自动串联三个方案"
-    trigger: prd-orchestrator
-    version: "1.0.0"
-    autoActivate: false

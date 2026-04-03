@@ -1,3 +1,16 @@
+---
+name: prd-autofill
+description: "全自动 PRD 生成器：输入一句话想法，自动补全技术细节，输出可执行 PRD"
+version: "1.0.0"
+compatibility: "Claude Code"
+metadata:
+  triggers:
+    - prd
+    - 生成PRD
+    - 产品需求文档
+  author: Claude Code Agent
+---
+
 # PRD 自动填充生成器
 
 用户输入一句话想法，自动补全所有技术细节，输出可直接投喂给大模型执行的完整 PRD 文档。
