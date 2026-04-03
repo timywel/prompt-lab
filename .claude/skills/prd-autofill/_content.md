@@ -492,6 +492,31 @@ macOS 实现：使用 `TISInputSource` API 遍历可用的输入源，找到 `kT
 ## 6. 边界条件汇总
 
 [汇总所有边界条件和异常处理]
+
+## 7. 一键升级
+
+本PRD已包含核心功能模块、技术实现和量化参数。如需更深入的工程化内容，可通过以下方式升级：
+
+### 自动升级到完整版
+
+说"深度扩展这个PRD"，本PRD将作为初步PRD输入，自动进行六维度深度扩展。
+
+### 手动升级章节
+
+如只需补充特定章节，可参考以下路径：
+- **架构设计** → 复制方案C第3章内容
+- **YAML组件规范** → 复制方案C第4章的WaveformView/FloatingWindow YAML
+- **测试场景** → 复制方案C第6章的25项具体测试场景
+- **CI/CD流水线** → 复制方案C第5章的完整GitHub Actions YAML
+- **运维支持** → 复制方案C第8章的日志规范和升级策略
+
+### 质量保证
+
+完整版PRD包含：
+- ✅ 14项自检清单全部通过
+- ✅ 无占位符，无矛盾冲突
+- ✅ 量化参数一致性交叉验证
+- ✅ 5个潜在冲突识别与解决方案
 ```
 
 ---
@@ -527,6 +552,41 @@ macOS 实现：使用 `TISInputSource` API 遍历可用的输入源，找到 `kT
 - 具体标准：每个功能必须包含**核心 API 名称** + **具体触发方式** + **步骤化的处理流程**
 
 补充说明：完整自检请参考 `../_shared/qa-checks/self-review-checklist.md` 中的 13 项逐条检查清单。
+
+---
+
+## 深度扩展参考
+
+当用户需要更深入的 PRD 时，以下章节对应方案C（prd-deep-expand）的完整版本：
+
+| 本方案章节 | 简化程度 | 完整版本参考 |
+|-----------|---------|------------|
+| 架构设计 | 简化依赖矩阵 | 方案C 第3章：完整dot数据流图 + 11模块接口契约 |
+| 测试策略 | 框架性描述 | 方案C 第6章：25项具体测试场景 + 10项性能指标 |
+| UI/UX规范 | 文字描述 | 方案C 第4章：YAML组件规范（WaveformView/FloatingWindow）|
+| 边界条件 | 15条概述 | 方案C 第7章：26条边界矩阵 + 6类分类 |
+| 工程化 | 命令级描述 | 方案C 第5章：12-target Makefile + 完整CI/CD YAML |
+
+### 快速升级到完整版
+
+用户可以在方案A生成后说"深度扩展这个PRD"直接调用 prd-deep-expand skill，自动读取方案A的输出作为初步PRD进行六维度扩展。
+
+### 共享知识库
+
+本方案引用的以下共享资源可提供额外支持：
+- `_shared/platform-configs/macos-infoplist.yaml` — 完整的Info.plist XML模板
+- `_shared/platform-configs/macos-entitlements.yaml` — 完整的Entitlements XML模板
+- `_shared/test-templates/test-pyramid-template.md` — 完整的测试金字塔模板
+- `_shared/qa-checks/self-review-checklist.md` — 14项自检清单
+
+### 与方案B/C的协作
+
+```
+方案B（对话挖掘需求）→ 方案A（快速生成PRD）→ 方案C（深度扩展）
+     ↓                      ↓                        ↓
+ 14个问题               961行简化版              1619行完整版
+                    +一键升级路径              +六维度覆盖
+```
 
 ---
 
@@ -649,5 +709,19 @@ TestPyramid:
 12. if issues.length > 0:
     - prd = fixIssues(prd, issues)
     - goto 11
-13. output(prd)
+13. 如果用户请求或文档行数 < 600：
+    - 提示："是否需要深度扩展？"
+    - 如果用户同意 → 建议调用 prd-deep-expand
+14. output(prd)
 ```
+
+### 升级提示规则
+
+在 `output(prd)` 执行前，如果满足以下任一条件，应提示用户考虑升级：
+- 用户原始请求中包含"详细"、"完整"、"深度"等关键词
+- 生成的 PRD 文档行数 < 600 行
+- 功能模块数 >= 5 个但测试策略/工程化内容较为简略
+- 架构设计中模块依赖关系描述不够具体
+
+提示话术建议：
+> "本PRD已完成核心功能模块设计（约 [X] 行）。如需更深入的工程化内容（完整数据流图、YAML组件规范、详细测试矩阵、CI/CD流水线等），请说'深度扩展这个PRD'，我将调用 prd-deep-expand skill 进行六维度扩展。"
