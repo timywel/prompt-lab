@@ -1,0 +1,9 @@
+name: prd-review-panel
+version: "1.0.0"
+description: "PRD 评审团：6维度并行评审 + 综合评分报告"
+triggers:
+  - prd-review-panel
+  - 评审PRD
+  - PRD打分
+  - 评审打分
+author: Claude Code Agent
