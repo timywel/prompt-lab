@@ -1,0 +1,14 @@
+# 临时文件
+tmp/
+
+# 本地集成（不上传）
+baize-loop/
+
+# IDE 本地配置
+.claude/local/
+.cursor/local/
+.windsurf/local/
+
+# 构建产物
+*.zip
+*.vsix

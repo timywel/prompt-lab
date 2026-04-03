@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  iOS Info.plist 配置模板
+  来源: ios-accessible-navigation-prd.md
+  用途: iOS 视障人士导航 App
+
+  使用说明:
+  1. 将 {{APP_NAME}} 替换为实际应用名称
+  2. 将 {{BUNDLE_IDENTIFIER}} 替换为实际的 Bundle Identifier
+  3. 将 {{VERSION}} 替换为当前版本号
+  4. 将 {{BUILD}} 替换为构建号
+  5. 根据实际功能启用/禁用对应的权限声明
+-->
+<plist version="1.0">
+<dict>
+    <!-- ==================== 基础信息 ==================== -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>{{APP_NAME}}</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+    <key>CFBundleShortVersionString</key>
+    <string>{{VERSION}}</string>
+    <key>CFBundleVersion</key>
+    <string>{{BUILD}}</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>MinimumOSVersion</key>
+    <string>16.0</string>
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+        <string>location-services</string>
+        <string>gps</string>
+        <string>magnetometer</string>
+    </array>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+
+    <!-- ==================== 定位权限 ==================== -->
+
+    <!-- 前台定位权限 (必须) -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>{{LOCATION_WHEN_IN_USE_DESCRIPTION}}</string>
+
+    <!-- 后台持续定位权限 (必须，支持后台导航) -->
+    <!-- 配合 UIBackgroundModes: location 使用 -->
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>{{LOCATION_ALWAYS_DESCRIPTION}}</string>
+
+    <!-- ==================== 语音识别权限 ==================== -->
+
+    <!-- 语音识别权限 (用于语音输入目的地) -->
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>此 App 需要语音识别权限来将您的语音转换为文字，用于输入导航目的地。</string>
+
+    <!-- ==================== 麦克风权限 ==================== -->
+    <!-- 如使用 AVSpeechRecognizer 进行语音输入时需要 -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>{{MICROPHONE_DESCRIPTION}}</string>
+
+    <!-- ==================== 相机权限 ==================== -->
+    <!-- 如无摄像头功能，不添加此字段。详见反面案例: "NSCameraUsageDescription: 不需要（无摄像头功能）" -->
+    <!--
+    <key>NSCameraUsageDescription</key>
+    <string>此 App 不使用相机功能。</string>
+    -->
+
+    <!-- ==================== 运动与健身权限 ==================== -->
+
+    <!-- 步态检测 (用于室内定位辅助) -->
+    <!-- 注意: CMPedometer iOS 可用性检查 — 仅 iOS 8+ 设备支持，且受隐私限制 -->
+    <key>NSMotionUsageDescription</key>
+    <string>此 App 使用运动数据辅助室内定位，提供更准确的导航指引。</string>
+
+    <!-- ==================== 后台运行模式 ==================== -->
+    <!-- 必须声明后台模式，否则系统会在应用切换到后台时强制终止 CoreLocation -->
+    <!-- 详见反面案例: "后台持续定位而不声明 UIBackgroundModes — 系统会强制终止" -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <!-- 后台持续导航定位 -->
+        <string>location</string>
+        <!-- 远程推送通知 -->
+        <string>remote-notification</string>
+        <!-- 音频播放 (语音播报) -->
+        <string>audio</string>
+    </array>
+
+    <!-- ==================== 推送通知 ==================== -->
+
+    <!-- APNs 远程推送 -->
+    <!-- 应用启动后通过 UIApplication.shared.registerForRemoteNotifications() 注册 -->
+    <key>UIUserInterfaceStyle</key>
+    <string>Automatic</string>
+
+    <!-- ==================== 无障碍配置 ==================== -->
+
+    <!-- 支持 VoiceOver -->
+    <!-- 应用内所有 UI 元素必须设置 accessibilityLabel -->
+    <key>UIApplicationAccessibilityTraits</key>
+    <array/>
+
+    <!-- 支持减少动画 (视障用户可能对动画敏感) -->
+    <key>UIAccessibilityReduceMotion</key>
+    <true/>
+
+    <!-- 支持高对比度 -->
+    <key>UIAccessibilityIncreaseContrast</key>
+    <true/>
+
+    <!-- 引导用户打开无障碍功能 -->
+    <key>UIAccessibilityLaunchPrompt</key>
+    <string>此 App 专为视障用户设计，需要启用 VoiceOver 以获得最佳体验。</string>
+
+    <!-- ==================== UI 配置 ==================== -->
+
+    <!-- 状态栏样式 -->
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <true/>
+
+    <!-- 主屏幕图标 -->
+    <key>UIBackgroundModes</key>
+    <array/>
+
+    <!-- 隐私政策 URL (App Store 展示) -->
+    <key>NSPrivacyPolicyURL</key>
+    <string>https://example.com/privacy</string>
+    <key>NSPrivacyPolicyType</key>
+    <string>NSPrivacyPolicyTypeThirdParty</string>
+
+    <!-- 隐私采集清单 (iOS 17+ 要求) -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyCollectedDataType</key>
+            <string>NSPrivacyCollectedDataTypeLocation</string>
+            <key>NSPrivacyCollectedDataTypePurpose</key>
+            <string>用于提供语音导航服务。应用仅采集路线起点终点和关键节点，不采集精确位置历史。</string>
+        </dict>
+        <dict>
+            <key>NSPrivacyCollectedDataType</key>
+            <string>NSPrivacyCollectedDataTypeUserInputErrors</string>
+            <key>NSPrivacyCollectedDataTypePurpose</key>
+            <string>用于改进导航准确性。</string>
+        </dict>
+    </array>
+
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- ==================== 本地化 ==================== -->
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>zh_CN</string>
+        <string>en</string>
+    </array>
+
+    <!-- ==================== App Store 配置 ==================== -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+
+    <!-- 支持的 iPad 多任务 -->
+    <key>UIRequiresFullScreen</key>
+    <false/>
+
+    <!-- 目标设备 -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+    </array>
+
+    <!-- 隐私说明 -->
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2026 {{COMPANY_NAME}}. All rights reserved.</string>
+</dict>
+</plist>

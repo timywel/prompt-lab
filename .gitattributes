@@ -1,0 +1,4 @@
+tmp/** linguist-generated
+baize-loop/** linguist-generated
+*.md linguist-language=Markdown
+Makefile linguist-language=Makefile

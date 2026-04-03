@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  iOS Entitlements 配置模板
+  来源: ios-accessible-navigation-prd.md
+  用途: iOS 视障人士导航 App
+
+  使用说明:
+  1. 将 {{TEAM_ID}} 替换为 Apple Developer Team ID
+  2. 将 {{BUNDLE_IDENTIFIER}} 替换为实际的 Bundle Identifier
+  3. 将 {{APP_GROUP}} 替换为应用程序组标识符 (如需跨应用共享数据)
+  4. 根据实际功能启用/禁用对应的 Entitlements
+
+  重要说明:
+  - Push Notifications entitlement 需要在 Apple Developer Portal 中启用
+  - Background Modes 中的 location 和 remote-notification 需要对应 entitlement
+  - App Groups 用于共享容器 (如 Widget 扩展)
+-->
+<plist version="1.0">
+<dict>
+    <!-- ==================== 推送通知 ==================== -->
+
+    <!-- 启用 APNs 远程推送 (必须在 Apple Developer Portal 中开启) -->
+    <!-- 配合 UIBackgroundModes: remote-notification 和 Info.plist 配置 -->
+    <!-- 注册流程: UIApplication.shared.registerForRemoteNotifications() -->
+    <key>aps-environment</key>
+    <string>development</string>
+    <!-- 发布时改为: <string>production</string> -->
+
+    <!-- ==================== 后台运行模式 ==================== -->
+
+    <!--
+      后台模式对应的 Entitlements (如需更细粒度控制):
+      - com.apple.developer.location.push: 允许通过 APNs 触发位置更新
+      - com.apple.developer.associated-domains: 通用链接 (如需深度链接)
+    -->
+
+    <!-- ==================== 应用程序组 ==================== -->
+    <!-- 用于 Widget 扩展、App Clip 或跨应用数据共享 -->
+    <!--
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.{{BUNDLE_IDENTIFIER}}</string>
+    </array>
+    -->
+
+    <!-- ==================== Keychain 访问 ==================== -->
+    <!-- 用于安全存储用户凭证、API Keys 等 -->
+    <!--
+    <key>keychain-access-groups</key>
+    <array>
+        <string>$(AppIdentifierPrefix){{BUNDLE_IDENTIFIER}}</string>
+    </array>
+    -->
+
+    <!-- ==================== HealthKit ==================== -->
+    <!-- 如需使用步态数据辅助定位 -->
+    <!--
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+    <key>com.apple.developer.healthkit.access</key>
+    <array/>
+    <key>com.apple.developer.healthkit.background-delivery</key>
+    <true/>
+    -->
+
+    <!-- ==================== 关联域名 ==================== -->
+    <!-- 用于 Universal Links (通用链接) 和 App Links -->
+    <!--
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:example.com</string>
+        <string>appclinks:example.com</string>
+    </array>
+    -->
+
+    <!-- ==================== HomeKit ==================== -->
+    <!-- 如需与 HomeKit 设备集成 -->
+    <!--
+    <key>com.apple.developer.homekit</key>
+    <true/>
+    -->
+
+    <!-- ==================== 无线附件配置 ==================== -->
+    <!-- 如需与蓝牙配件通信 -->
+    <!--
+    <key>com.apple.developer.networking.wifi-info</key>
+    <true/>
+    -->
+
+    <!-- ==================== 地图配置 ==================== -->
+    <!--
+      MapKit 无需额外 Entitlements，但以下场景可能需要:
+      - 自定义地图覆盖物: 无需特殊权限
+      - 离线地图: 使用 MKMapSnapshotter，无需额外权限
+    -->
+
+    <!-- ==================== 数据保护 ==================== -->
+
+    <!-- 文件数据保护级别 -->
+    <!-- NSFileProtectionComplete: 文件在设备锁定时不可访问 -->
+    <key>NSFileProtectionComplete</key>
+    <true/>
+
+    <!-- ==================== 深度链接 ==================== -->
+    <!--
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>{{BUNDLE_IDENTIFIER}}</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>{{APP_SCHEME}}</string>
+            </array>
+        </dict>
+    </array>
+    -->
+
+    <!-- ==================== App Store Connect 配置 ==================== -->
+    <!--
+      版本提审注意事项:
+      1. 隐私政策 URL 必须在 App Store Connect 中填写
+      2. 视障用户应用需在审核备注中说明无障碍功能
+      3. 分级设为 4+
+      4. 支持设备: iPhone (iPad 可用但非核心目标)
+    -->
+</dict>
+</plist>
