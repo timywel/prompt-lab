@@ -16,3 +16,10 @@ skills:
     description: "深度扩展型 PRD 生成器：从初步PRD扩展架构/UI/UX/工程化/测试/边界/运维六个维度"
     trigger: prd-deep-expand
     version: "1.0.0"
+
+  - name: prd-orchestrator
+    path: prd-orchestrator
+    description: "PRD 生成协调层：分析复杂度，智能路由，自动串联三个方案"
+    trigger: prd-orchestrator
+    version: "1.0.0"
+    autoActivate: false
