@@ -1,46 +1,46 @@
-# prd-qa: PRD 质检与修复
+# prd-qa: PRD Quality Assurance and Repair
 
-## 功能
+## Overview
 
-自动审查 PRD 输出，修复 13 类常见问题，输出质量报告。
+Automatically reviews PRD output, fixes 13 common categories of issues, and outputs a quality report.
 
-## 质检维度（13 项）
+## Quality Dimensions (13 Items)
 
-| # | 维度 | 说明 |
-|---|------|------|
-| 1 | 无占位符扫描 | 扫描 [TODO]/[TBD]/[FIXME] 等未填写内容 |
-| 2 | Info.plist / Entitlements | 缺失则自动注入平台配置模板 |
-| 3 | API 准确性 | 检测平台与 API 不匹配（如 CMPedometer 在 macOS） |
-| 4 | 动画时长矛盾 | 同一动画多处出现不同数值 |
-| 5 | 量化参数完整性 | 延迟/内存/CPU/帧率等必须有具体数值 |
-| 6 | 测试策略完整性 | 缺失则自动注入测试金字塔模板 |
-| 7 | CI/CD 语法检查 | 修正 `$${{ secrets }}` 等常见笔误 |
-| 8 | 无障碍规范检查 | VoiceOver / Dynamic Type / reduceMotion |
-| 9 | 平台一致性检查 | 技术栈与目标平台匹配验证 |
-| 10 | 边界条件覆盖度 | 边界条件数量 >= 10 |
-| 11 | 自检清单完整性 | 缺失则自动注入自检清单模板 |
-| 12 | 技术栈完整性 | 核心 API 全覆盖检查 |
-| 13 | 知识库复用检查 | 是否引用 `_shared/` 共享资源 |
+| # | Dimension | Description |
+|---|-----------|-------------|
+| 1 | No Placeholder Scanning | Scans for unfilled content such as [TODO]/[TBD]/[FIXME] |
+| 2 | Info.plist / Entitlements | Auto-injects platform config templates if missing |
+| 3 | API Accuracy | Detects platform/API mismatches (e.g., CMPedometer on macOS) |
+| 4 | Animation Duration Conflicts | Same animation appearing with different values in multiple places |
+| 5 | Quantitative Parameter Completeness | Delay/memory/CPU/framerate must have specific values |
+| 6 | Testing Strategy Completeness | Auto-injects test pyramid template if missing |
+| 7 | CI/CD Syntax Check | Fixes common typos like `$${{ secrets }}` |
+| 8 | Accessibility Compliance Check | VoiceOver / Dynamic Type / reduceMotion |
+| 9 | Platform Consistency Check | Tech stack and target platform match verification |
+| 10 | Edge Case Coverage | Edge case count >= 10 |
+| 11 | Self-Review Checklist Completeness | Auto-injects self-review checklist template if missing |
+| 12 | Tech Stack Completeness | Full coverage check of core APIs |
+| 13 | Knowledge Base Reuse Check | Verifies if `_shared/` shared resources are referenced |
 
-## 激活方式
+## Activation
 
-- 说"审查 PRD"、"检查 PRD"或"PRD 质量报告"激活
-- 在方案 A / B / C（PRD 生成器）输出后自动调用
+- Activate by saying "审查 PRD" (review PRD), "检查 PRD" (check PRD), or "PRD 质量报告" (PRD quality report)
+- Automatically invoked after Solution A / B / C (PRD generators) output
 
-## 知识库依赖
+## Knowledge Base Dependencies
 
-本技能依赖 `_shared/` 中的以下模板（如有则自动注入）：
+This skill depends on the following templates in `_shared/` (auto-injected if present):
 
-- `_shared/platform-configs/` — 平台配置文件模板（Info.plist / Entitlements / manifest 等）
-- `_shared/test-templates/test-pyramid-template.md` — 测试金字塔模板
-- `_shared/qa-checks/self-review-checklist.md` — 自检清单模板
+- `_shared/platform-configs/` — Platform config file templates (Info.plist / Entitlements / manifest, etc.)
+- `_shared/test-templates/test-pyramid-template.md` — Test pyramid template
+- `_shared/qa-checks/self-review-checklist.md` — Self-review checklist template
 
-## 输出
+## Output
 
-- 质量报告（含评分 + 问题列表 + 修复记录）
-- 自动修复的 diff
-- 待用户确认的问题清单
+- Quality report (with score + issue list + fix log)
+- Auto-fixed diffs
+- Issue list pending user confirmation
 
-## 版本
+## Version
 
-- v1.0.0 — 初始版本，13 维度质检
+- v1.0.0 — Initial version, 13-dimension quality inspection

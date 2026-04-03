@@ -1,28 +1,28 @@
-# OpenCode 适配器
+# OpenCode Adapter
 
-本适配器将技能库符号链接到 OpenCode 的全局 skills 目录。
+This adapter symlinks the skill library to OpenCode's global skills directory.
 
-## 安装方式
+## Installation
 
-### 自动安装（推荐）
+### Automatic (Recommended)
 ```bash
 cd prompt-lab
 make install-opencode
-# 或
+# or
 ./adapters/opencode/install.sh
 ```
 
-### 手动安装
+### Manual
 ```bash
 mkdir -p ~/.opencode/skills
 ln -sfn "$(pwd)" ~/.opencode/skills/prompt-lab
 ```
 
-## 工作原理
+## How It Works
 
-OpenCode 使用 `~/.opencode/skills/` 作为全局技能目录。
-安装后，skills 作为名为 `prompt-lab` 的技能模块可用。
+OpenCode uses `~/.opencode/skills/` as its global skills directory.
+After installation, skills are available as a skill module named `prompt-lab`.
 
-## 验证安装
+## Verify Installation
 
-安装后，在 OpenCode 中运行 `/prompt-lab` 或查看技能列表验证。
+After installation, run `/prompt-lab` in OpenCode or check the skill list to verify.

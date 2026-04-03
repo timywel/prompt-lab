@@ -10,7 +10,7 @@ metadata:
     - PRD安全
     - 安全审查
     - 隐私合规
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD 安全分析扩展技能

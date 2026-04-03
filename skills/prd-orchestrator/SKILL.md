@@ -9,7 +9,7 @@ metadata:
     - 生成PRD
     - 帮我写PRD
     - 写一个PRD
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD-Orchestrator: PRD 生成协调层

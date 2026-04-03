@@ -1,15 +1,15 @@
-# VSCode 适配器
+# VSCode Adapter
 
-本适配器提供 VSCode 扩展，用于浏览和查看 PRD 生成器技能库。
+This adapter provides a VSCode extension for browsing and viewing the PRD generator skill library.
 
-## 安装方式
+## Installation
 
-### 方式一：复制扩展目录
+### Option 1: Copy Extension Directory
 ```bash
 cp -r adapters/vscode ~/.vscode/extensions/prompt-lab-prd-generator
 ```
 
-### 方式二：打包为 .vsix 并安装
+### Option 2: Package as .vsix and Install
 ```bash
 cd adapters/vscode
 npm install -g @vscode/vsce
@@ -17,25 +17,25 @@ vsce package
 code --install-extension prompt-lab-prd-generator-1.0.0.vsix
 ```
 
-### 方式三：使用 Makefile
+### Option 3: Use Makefile
 ```bash
 make install-vscode
 ```
 
-## 使用方法
+## Usage
 
-1. 安装扩展后，重新加载 VSCode 窗口
-2. 按 `Ctrl+Shift+P`（或 `Cmd+Shift+P`）打开命令面板
-3. 输入 `显示 PRD 生成器技能库` 并选择
-4. 从列表中选择要查看的技能
+1. After installing the extension, reload the VSCode window
+2. Press `Ctrl+Shift+P` (or `Cmd+Shift+P`) to open the command palette
+3. Type `Show PRD Generator Skill Library` and select it
+4. Choose a skill from the list to view
 
-## 工作原理
+## How It Works
 
-本扩展为**内容展示型**，用于在 VSCode 中快速查阅技能文档。
-由于 VSCode 原生不支持 Claude Code 风格的 skill 系统，
-本适配器通过 WebView 命令面板提供技能浏览功能。
+This extension is **content-display focused**, enabling quick skill documentation lookup in VSCode.
+Since VSCode does not natively support the Claude Code-style skill system,
+this adapter provides skill browsing via WebView command palette.
 
-## 技能展示
+## Skill Display
 
-扩展会读取 `skills/` 目录下的所有技能文件夹，
-提取每个技能的 SKILL.md 文件并以 Markdown 预览方式展示。
+The extension reads all skill folders under the `skills/` directory,
+extracts the SKILL.md file from each skill, and displays it as a Markdown preview.

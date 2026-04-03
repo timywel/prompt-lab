@@ -1,12 +1,12 @@
-# PRD 评审团 Skill
+# PRD Review Panel Skill
 
-## 简介
+## Overview
 
-PRD 评审团是一个标准化的 PRD 多维度评审 Skill，通过并行调度的 6 个独立评审 Agent，对 PRD 文档进行全方位评估，输出综合评分报告。
+The PRD Review Panel is a standardized multi-dimensional PRD review Skill. Through parallel-scheduled 6 independent review Agents, it performs comprehensive evaluation of the PRD document and outputs a consolidated scoring report.
 
-## 激活方式
+## Activation
 
-在对话中直接使用以下任一方式触发：
+Trigger it in conversation using any of the following:
 
 ```
 评审PRD
@@ -15,64 +15,64 @@ PRD打分
 prd-review-panel
 ```
 
-## 评审维度
+## Review Dimensions
 
-| # | 维度 | 权重 | 评审重点 |
-|---|------|------|---------|
-| 1 | 技术架构 | 20% | API具体性/技术栈正确性/模块划分/技术深度 |
-| 2 | 产品设计 | 20% | 功能完整性/需求清晰度/边界条件/用户价值 |
-| 3 | 工程化 | 15% | 构建系统/CI-CD/开发工具链/发布流程 |
-| 4 | 测试策略 | 15% | 测试金字塔/场景覆盖/性能测试/可测试性 |
-| 5 | 可执行性 | 15% | 无占位符/量化完整性/知识库覆盖/自检机制 |
-| 6 | UI/UX精确度 | 15% | 布局精确性/组件规范/动画规范/无障碍规范 |
+| # | Dimension | Weight | Review Focus |
+|---|-----------|--------|--------------|
+| 1 | Technical Architecture | 20% | API specificity / tech stack correctness / module division / technical depth |
+| 2 | Product Design | 20% | Feature completeness / requirement clarity / edge cases / user value |
+| 3 | Engineering | 15% | Build system / CI-CD / development toolchain / release process |
+| 4 | Testing Strategy | 15% | Test pyramid / scenario coverage / performance testing / testability |
+| 5 | Executability | 15% | No placeholders / quantitative completeness / knowledge base coverage / self-check mechanism |
+| 6 | UI/UX Precision | 15% | Layout precision / component specs / animation specs / accessibility specs |
 
-## 评审流程
+## Review Process
 
-1. 接收 PRD（文件路径或文本）
-2. 分析 PRD 文件名和内容，判断方案类型
-3. 读取 PRD 内容
-4. 读取共享知识库 (`_shared/`) 中的评审模板和平台配置
-5. 并行执行 6 维度评审（每个维度独立 Agent）
-6. 收集 6 份独立评审报告
-7. 聚合评分：加权总分 + 分维度排名 + 问题汇总
-8. 生成综合报告
-9. 保存到 `docs/review/PRD-Review-Panel-Report.md`
+1. Receive PRD (file path or text)
+2. Analyze PRD filename and content to determine solution type
+3. Read PRD content
+4. Read review templates and platform configs from shared knowledge base (`_shared/`)
+5. Execute 6-dimension reviews in parallel (each dimension is an independent Agent)
+6. Collect 6 independent review reports
+7. Aggregate scores: weighted total + per-dimension ranking + issue summary
+8. Generate consolidated report
+9. Save to `docs/review/PRD-Review-Panel-Report.md`
 
-## 评分标准
+## Scoring Criteria
 
-| 分数区间 | 含义 |
-|---------|------|
-| 9-10 | 达到生产级标准，可直接用于开发 |
-| 7-8 | 接近生产级，有少量细节需补充 |
-| 5-6 | 基础可用，但需要大量补充 |
-| 3-4 | 仅描述了功能需求，精确度不足 |
-| 1-2 | 几乎没有规范信息 |
+| Score Range | Meaning |
+|-------------|---------|
+| 9-10 | Production-grade; ready for direct development |
+| 7-8 | Near production-grade; a few details need supplementing |
+| 5-6 | Basic usability; needs significant supplementation |
+| 3-4 | Only describes functional requirements; insufficient precision |
+| 1-2 | Almost no specification information |
 
-## 问题严重程度
+## Issue Severity Levels
 
-| 级别 | 标记 | 说明 |
-|------|------|------|
-| 高危 | :red_circle: | 会导致功能无法实现或开发失败 |
-| 中危 | :yellow_circle: | 影响开发效率或质量 |
-| 低危 | :green_circle: | 最佳实践建议 |
+| Level | Marker | Description |
+|-------|--------|-------------|
+| High | :red_circle: | Will cause feature to be unimplementable or lead to development failure |
+| Medium | :yellow_circle: | Affects development efficiency or quality |
+| Low | :green_circle: | Best practice suggestions |
 
-## 输出文件
+## Output File
 
-评审完成后，综合报告将保存到：
+Upon completion, the consolidated report is saved to:
 
 ```
 docs/review/PRD-Review-Panel-Report.md
 ```
 
-## 文件结构
+## File Structure
 
 ```
 prd-review-panel/
-├── _registry.yaml              # Skill 注册配置
-├── _definition.yaml            # Skill 定义元数据
-├── _content.md                 # 评审框架（核心）
+├── _registry.yaml              # Skill registration config
+├── _definition.yaml            # Skill definition metadata
+├── _content.md                 # Review framework (core)
 ├── _templates/
-│   ├── review-report-template.md  # 各维度评审报告模板
-│   └── aggregator-template.md     # 综合报告聚合模板
-└── README.md                   # 本文档
+│   ├── review-report-template.md  # Per-dimension review report template
+│   └── aggregator-template.md     # Consolidated report aggregation template
+└── README.md                   # This file
 ```

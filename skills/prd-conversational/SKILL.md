@@ -9,7 +9,7 @@ metadata:
     - 对话式PRD
     - 引导生成PRD
     - 交互式需求文档
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD 交互式对话构建器

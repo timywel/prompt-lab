@@ -1,60 +1,60 @@
-# prd-deep-expand: 深度扩展型 PRD 生成器
+# prd-deep-expand: Deep Expansion PRD Generator
 
-## 功能
+## Overview
 
-初步 PRD → 六维度深度扩展 → 完整可执行的 PRD。
+Preliminary PRD → Six-Dimension Deep Expansion → Complete, Executable PRD.
 
-## 扩展的六个维度
+## Six Expansion Dimensions
 
-| # | 维度 | 快速模式 | 完整模式 | 说明 |
-|---|------|---------|---------|------|
-| 1 | 架构设计 | ✅ | ✅ | 技术栈/模块划分/数据流/依赖关系 |
-| 2 | UI/UX 精确化 | ✅ | ✅ | 布局/组件规范(YAML)/动画/无障碍 |
-| 3 | 工程化 | ✅ | ✅ | 构建系统/Makefile/CI/CD/部署 |
-| 4 | 测试策略 | ❌ | ✅ | 测试金字塔/平台测试/性能指标 |
-| 5 | 边界条件 | ❌ | ✅ | 边界矩阵/反面案例 |
-| 6 | 运维支持 | ❌ | ✅ | 日志规范/配置管理/升级/迁移 |
+| # | Dimension | Quick Mode | Full Mode | Description |
+|---|-----------|------------|-----------|-------------|
+| 1 | Architecture Design | ✅ | ✅ | Tech stack / module division / data flow / dependencies |
+| 2 | UI/UX Precision | ✅ | ✅ | Layout / component specs (YAML) / animation / accessibility |
+| 3 | Engineering | ✅ | ✅ | Build system / Makefile / CI/CD / deployment |
+| 4 | Testing Strategy | ❌ | ✅ | Test pyramid / platform testing / performance metrics |
+| 5 | Edge Cases | ❌ | ✅ | Edge case matrix / negative test cases |
+| 6 | Operations Support | ❌ | ✅ | Logging conventions / config management / upgrades / migration |
 
-## 扩展模式
+## Expansion Modes
 
-| 模式 | 维度数 | 耗时 | 适用场景 |
-|------|--------|------|---------|
-| 快速模式 | 3个 | ~5分钟 | 时间紧迫 |
-| 完整模式 | 6个 | ~15分钟 | 重要项目 |
-| 确认模式 | 6个 | ~30分钟 | 关键项目 |
-| 指定维度 | 自选 | 不定 | 已有部分内容 |
+| Mode | Dimensions | Time | Use Case |
+|------|------------|------|----------|
+| Quick Mode | 3 | ~5 min | Time-constrained |
+| Full Mode | 6 | ~15 min | Important projects |
+| Confirm Mode | 6 | ~30 min | Critical projects |
+| Custom Dimensions | Self-selected | Variable | Partial content already exists |
 
-## 核心特性
+## Core Features
 
-| 特性 | 说明 |
-|------|------|
-| 六维度覆盖 | 架构/UI&UX/工程化/测试/边界/运维 |
-| 冲突检测 | 自动检测5种冲突类型并引导解决 |
-| YAML组件规范 | 为每个UI组件生成完整YAML规范 |
-| 数据流图 | 自动生成模块间数据流（dot格式） |
-| 量化一致性 | 确保各维度间的参数一致 |
+| Feature | Description |
+|---------|-------------|
+| Six-Dimension Coverage | Architecture / UI&UX / Engineering / Testing / Edge Cases / Operations |
+| Conflict Detection | Automatically detects 5 types of conflicts and guides resolution |
+| YAML Component Specs | Generates complete YAML specs for each UI component |
+| Data Flow Diagrams | Auto-generates inter-module data flow (dot format) |
+| Quantitative Consistency | Ensures parameter consistency across dimensions |
 
-## 与方案A/B 的对比
+## Comparison with Solution A/B
 
-| | 方案A（全自动） | 方案B（交互式） | 方案C（深度扩展） |
-|--|-------------|--------------|----------------|
-| 输入 | 一句话想法 | 多轮对话 | 初步 PRD |
-| 输出 | 完整 PRD | 用户确认的 PRD | 深度扩展 PRD |
-| 核心能力 | 知识库补全 | 需求挖掘 | 深度扩展 |
-| 适用阶段 | 概念期 | 需求期 | 规划/设计期 |
-| 维度覆盖 | 1个（技术） | 1个（需求） | 6个（全方位）|
+| | Solution A (Auto) | Solution B (Conversational) | Solution C (Deep Expand) |
+|--|-----------------|------------------------------|-------------------------|
+| Input | One-sentence idea | Multi-round conversation | Preliminary PRD |
+| Output | Complete PRD | User-confirmed PRD | Deep-expanded PRD |
+| Core Capability | Knowledge base completion | Requirement discovery | Deep expansion |
+| Applicable Stage | Concept phase | Requirement phase | Planning/design phase |
+| Dimensions Covered | 1 (technical) | 1 (requirements) | 6 (comprehensive) |
 
-## 协作能力
+## Collaboration Capabilities
 
-三个方案可以串联使用：
+The three solutions can be chained together:
 ```
-方案B（交互式收集需求）
+Solution B (interactive requirement gathering)
     ↓
-方案A（补充技术细节）
+Solution A (supplement technical details)
     ↓
-方案C（深度扩展）
+Solution C (deep expansion)
 ```
 
-## 版本历史
+## Version History
 
-- 1.0.0: 初始版本，六维度扩展，冲突检测，三种模式，确认机制
+- 1.0.0: Initial version, six-dimension expansion, conflict detection, three modes, confirmation mechanism

@@ -9,7 +9,7 @@ metadata:
     - 深度扩展PRD
     - 扩展需求文档
     - 深化PRD
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD 深度扩展生成器

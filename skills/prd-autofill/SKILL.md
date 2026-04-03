@@ -8,7 +8,7 @@ metadata:
     - prd
     - 生成PRD
     - 产品需求文档
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD 自动填充生成器

@@ -8,7 +8,7 @@ metadata:
     - prd-qa
     - 审查PRD
     - 检查PRD质量
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD-QA: PRD 质检与修复

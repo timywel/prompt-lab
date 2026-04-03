@@ -1,44 +1,44 @@
-# prd-orchestrator: PRD 生成协调层
+# prd-orchestrator: PRD Generation Orchestration Layer
 
-## 功能
+## Overview
 
-统一入口，自动分析输入复杂度，智能路由到最合适的方案组合。
+Unified entry point that automatically analyzes input complexity and intelligently routes to the most suitable solution combination.
 
-## 工作流
+## Workflow
 
 ```
-简单型:   方案A → (可选)方案C → PRD-QA
-复杂型:   方案B → 方案A → 方案C → PRD-QA
-已有PRD:  方案C → PRD-QA
-不确定型: 方案B 需求挖掘 → 重新评估
+Simple:       Solution A → (optional) Solution C → PRD-QA
+Complex:      Solution B → Solution A → Solution C → PRD-QA
+Existing PRD: Solution C → PRD-QA
+Uncertain:     Solution B (requirement discovery) → Re-evaluation
 ```
 
-## 方案映射
+## Solution Mapping
 
-| 方案 | Skill 名称 | 功能 |
-|------|-----------|------|
-| 方案A | prd-autofill | 全自动 PRD 生成器，输入一句话想法自动补全技术细节 |
-| 方案B | prd-conversational | 交互式 PRD 构建器，多轮引导对话探测需求 |
-| 方案C | prd-deep-expand | 深度扩展型 PRD 生成器，从六个维度深度扩展 |
-| PRD-QA | 内置质检 | 对最终输出进行质量检查 |
+| Solution | Skill Name | Function |
+|----------|------------|----------|
+| Solution A | prd-autofill | Fully automatic PRD generator that auto-fills technical details from a one-sentence idea |
+| Solution B | prd-conversational | Interactive PRD builder with multi-round guided conversation for requirement discovery |
+| Solution C | prd-deep-expand | Deep expansion PRD generator covering six dimensions |
+| PRD-QA | Built-in QA | Quality inspection of the final output |
 
-## 复杂度评估
+## Complexity Assessment
 
-| 类型 | 特征 | 路由 |
-|------|------|------|
-| 简单型 | < 100字，单一功能，常见平台 | 方案A |
-| 已有PRD型 | 提供初步PRD文本或文件路径 | 方案C |
-| 复杂/创新型 | > 200字，多功能，特殊平台或创新交互 | 方案B → 方案A → 方案C |
-| 不确定型 | 描述模糊，功能不明确 | 方案B 需求挖掘 |
+| Type | Characteristics | Route |
+|------|----------------|-------|
+| Simple | < 100 characters, single feature, common platform | Solution A |
+| Existing PRD | Provides preliminary PRD text or file path | Solution C |
+| Complex/Innovative | > 200 characters, multiple features, special platform or innovative interaction | Solution B → Solution A → Solution C |
+| Uncertain | Vague description, unclear functionality | Solution B (requirement discovery) |
 
-## 使用方式
+## Usage
 
-说"帮我生成PRD"激活，无需选择方案。协调层自动评估并路由。
+Activate by saying "帮我生成PRD" (help me generate a PRD). No solution selection needed. The orchestration layer automatically evaluates and routes.
 
-## 协调层职责
+## Orchestration Layer Responsibilities
 
-1. **上下文传递**：串联方案B/A/C，确保信息连贯
-2. **用户决策点**：每个分支点询问用户，不自动决策
-3. **进度展示**：每步完成后展示当前进度
-4. **可中断**：用户可随时说"停"终止后续步骤
-5. **质量担保**：最终输出必须经过 PRD-QA 质检
+1. **Context Propagation**: Chains Solutions B/A/C together, ensuring information continuity
+2. **User Decision Points**: Asks the user at each branch point; does not auto-decide
+3. **Progress Display**: Shows current progress after each step completes
+4. **Interruptible**: User can say "停" (stop) at any time to terminate subsequent steps
+5. **Quality Assurance**: Final output must pass PRD-QA inspection

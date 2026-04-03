@@ -1,28 +1,28 @@
-# Cursor 适配器
+# Cursor Adapter
 
-本适配器将根目录 `skills/` 符号链接到 Cursor 的项目级 skills 目录。
+This adapter symlinks the root `skills/` directory to Cursor's project-level skills directory.
 
-## 安装方式
+## Installation
 
-### 自动安装（推荐）
+### Automatic (Recommended)
 ```bash
 cd prompt-lab
 make install-cursor
-# 或
+# or
 ./adapters/cursor/install.sh
 ```
 
-### 手动安装
+### Manual
 ```bash
 mkdir -p .cursor
 ln -sfn ../skills .cursor/skills
 ```
 
-## 工作原理
+## How It Works
 
-Cursor 使用与 Claude Code 兼容的 skill 格式。
-通过符号链接共享 `skills/` 目录，实现跨平台技能同步。
+Cursor uses a skill format compatible with Claude Code.
+Symlinking the shared `skills/` directory enables cross-platform skill sync.
 
-## 验证安装
+## Verify Installation
 
-安装后，在 Cursor 中触发 skill 命令（如 `/prd-autofill`）验证加载。
+After installation, trigger a skill command in Cursor (e.g., `/prd-autofill`) to verify loading.

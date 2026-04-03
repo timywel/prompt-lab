@@ -1,64 +1,64 @@
-# prd-conversational: 交互式 PRD 构建器
+# prd-conversational: Interactive PRD Builder
 
-## 功能
+## Overview
 
-通过多轮引导对话（14个问题分4个阶段），探测用户需求，逐模块确认后输出完整 PRD。
+Through multi-round guided conversation (15 questions across 4 phases), probes user requirements and outputs a complete PRD with per-module confirmation.
 
-## 使用方法
+## Usage
 
-在 Claude Code 中，说"开始对话式 PRD"或"对话式产品需求"激活本技能。
+In Claude Code, say "开始对话式 PRD" (start conversational PRD) or "对话式产品需求" (conversational product requirements) to activate this skill.
 
-## 对话流程
+## Conversation Flow
 
-| 阶段 | 问题数 | 内容 |
-|------|--------|------|
-| 阶段0 | 1个 | 意图理解 + 确认 |
-| 阶段1 | 4个 | 平台与基础 |
-| 阶段2 | 5个 | 核心功能 |
-| 阶段3 | 2个 | 技术偏好 |
-| 阶段4 | 3个 | 质量要求 |
-| **总计** | **15个** | |
+| Phase | Questions | Content |
+|------|-----------|---------|
+| Phase 0 | 1 | Intent understanding + confirmation |
+| Phase 1 | 4 | Platform and basics |
+| Phase 2 | 5 | Core features |
+| Phase 3 | 2 | Technical preferences |
+| Phase 4 | 3 | Quality requirements |
+| **Total** | **15** | |
 
-共15个问题（包含Q0初始想法）。
+Total of 15 questions (including Q0 initial idea).
 
-## 核心特性
+## Core Features
 
-| 特性 | 说明 |
-|------|------|
-| 智能推断 | 根据回答自动标记需要的API和权限 |
-| 进度可视化 | 每个问题标注 [阶段X/4] 和 问题X/Y |
-| 跳过机制 | 每个问题可跳过，使用默认值 |
-| 中断恢复 | 支持中断、继续、重新开始 |
-| 确认机制 | 逐模块确认，最多3轮修改 |
-| 导出选项 | 保存到文件或直接在终端预览 |
+| Feature | Description |
+|---------|-------------|
+| Smart Inference | Automatically flags required APIs and permissions based on answers |
+| Progress Visualization | Each question annotated with [Phase X/4] and Question X/Y |
+| Skip Mechanism | Each question can be skipped with a default value |
+| Resume After Interrupt | Supports interrupt, resume, and restart |
+| Confirmation Mechanism | Per-module confirmation with up to 3 rounds of modifications |
+| Export Options | Save to file or preview directly in terminal |
 
-## 状态管理
+## State Management
 
-对话状态保存在 `tmp/prd-conversational/state.yaml`，支持：
-- 中断后继续（说"继续对话"从上次问题恢复）
-- 修改已回答的问题
-- 重新开始（说"重新开始"清空状态）
+Conversation state is saved in `tmp/prd-conversational/state.yaml`, supporting:
+- Resume after interrupt (say "继续对话" (continue conversation) to resume from last question)
+- Modify previously answered questions
+- Restart (say "重新开始" (restart) to clear state)
 
-## 默认值
+## Default Values
 
-每个问题都有智能默认值，用户可直接回车跳过：
-- 平台: macOS 桌面应用
-- 版本: 最近1-2个版本
-- MVP 优先
-- 均衡性能
-- 基础测试覆盖
+Each question has intelligent defaults; users can press Enter to skip:
+- Platform: macOS desktop app
+- Version: Last 1-2 versions
+- MVP-first
+- Balanced performance
+- Basic test coverage
 
-## 与方案A的对比
+## Comparison with Solution A
 
-| | 方案A（全自动） | 方案B（交互式） |
-|--|-------------|--------------|
-| 用户参与 | 低 | 高（15个问题）|
-| PRD 准确性 | 依赖推断 | 用户确认 |
-| 生成速度 | 秒级 | 分钟级 |
-| 适用场景 | 常见App类型 | 创新/复杂App |
-| 无障碍需求 | 不会主动询问 | Q3目标用户时自动推断 |
-| 中断恢复 | 不支持 | 支持 |
+| | Solution A (Auto) | Solution B (Conversational) |
+|--|-----------------|------------------------------|
+| User Involvement | Low | High (15 questions) |
+| PRD Accuracy | Relies on inference | User-confirmed |
+| Generation Speed | Seconds | Minutes |
+| Applicable Scenarios | Common app types | Innovative/complex apps |
+| Accessibility Requirements | Not proactively asked | Auto-inferred when Q3 asks about target users |
+| Resume After Interrupt | Not supported | Supported |
 
-## 版本历史
+## Version History
 
-- 1.0.0: 初始版本，15个问题，4阶段对话，智能推断，确认机制，中断恢复
+- 1.0.0: Initial version, 15 questions, 4-phase conversation, smart inference, confirmation mechanism, resume after interrupt

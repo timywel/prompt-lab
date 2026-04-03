@@ -10,7 +10,7 @@ metadata:
     - PRD性能
     - 性能分析
     - 性能测试
-  author: Claude Code Agent
+  author: timywel
 ---
 
 ## 技能激活

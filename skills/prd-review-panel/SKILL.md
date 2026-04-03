@@ -9,7 +9,7 @@ metadata:
     - 评审PRD
     - PRD打分
     - 评审打分
-  author: Claude Code Agent
+  author: timywel
 ---
 
 # PRD 评审团 Skill

@@ -1,13 +1,13 @@
 #!/bin/bash
-# PRD Generator Cross-Platform Installer
-# Supports Claude Code, Cursor, Windsurf, OpenCode interactive installation
+# PRD Generator 跨平台安装脚本
+# 支持 Claude Code、Cursor、Windsurf、OpenCode 交互式安装
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Colors
+# 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -15,12 +15,12 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 echo -e "${BLUE}╔══════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║   PRD Generator Installer v1.0.0             ║${NC}"
+echo -e "${BLUE}║   PRD Generator 安装脚本 v1.0.0             ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Detect available platforms
-echo -e "${YELLOW}Detecting available platforms...${NC}"
+# 检测可用平台
+echo -e "${YELLOW}检测可用平台...${NC}"
 
 [ -d "$HOME/.claude" ] && echo -e "  ${GREEN}[✓]${NC} Claude Code ($HOME/.claude)"
 [ -d "$HOME/.cursor" ] && echo -e "  ${GREEN}[✓]${NC} Cursor ($HOME/.cursor)"
@@ -29,16 +29,16 @@ echo -e "${YELLOW}Detecting available platforms...${NC}"
 [ -d "$HOME/.vscode/extensions" ] && echo -e "  ${GREEN}[✓]${NC} VSCode"
 
 echo ""
-echo -e "${YELLOW}Select installation option:${NC}"
-echo "  1) Quick install (core: Claude Code + Cursor + Windsurf)"
-echo "  2) Full install (core + OpenCode)"
-echo "  3) Select platforms"
-echo "  4) Show VSCode installation guide"
-echo "  5) Uninstall all"
-echo "  6) Exit"
+echo -e "${YELLOW}选择安装方式：${NC}"
+echo "  1) 快速安装（核心平台：Claude Code + Cursor + Windsurf）"
+echo "  2) 全量安装（核心平台 + OpenCode）"
+echo "  3) 选择平台安装"
+echo "  4) 显示 VSCode 安装说明"
+echo "  5) 卸载所有安装"
+echo "  6) 退出"
 echo ""
 
-read -p "Choice [1-6]: " choice
+read -p "选择 [1-6]: " choice
 
 do_install() {
     local name="$1"
@@ -51,30 +51,30 @@ do_install() {
 
 case "$choice" in
     1)
-        echo -e "\n${BLUE}▶ Installing core platforms...${NC}"
+        echo -e "\n${BLUE}▶ 安装核心平台...${NC}"
         do_install "Claude Code" ".claude" "$(pwd)/skills"
         do_install "Cursor" ".cursor" "$(pwd)/skills"
         do_install "Windsurf" ".windsurf" "$(pwd)/skills"
-        echo -e "\n${GREEN}✅ Done!${NC}"
+        echo -e "\n${GREEN}✅ 完成！${NC}"
         ;;
     2)
-        echo -e "\n${BLUE}▶ Full install...${NC}"
+        echo -e "\n${BLUE}▶ 全量安装...${NC}"
         do_install "Claude Code" ".claude" "$(pwd)/skills"
         do_install "Cursor" ".cursor" "$(pwd)/skills"
         do_install "Windsurf" ".windsurf" "$(pwd)/skills"
         [ -d ~/.opencode/skills/prompt-lab ] && [ ! -L ~/.opencode/skills/prompt-lab ] && rm -rf ~/.opencode/skills/prompt-lab || true
         mkdir -p ~/.opencode/skills && ln -sfn "$(pwd)/skills" ~/.opencode/skills/prompt-lab
         echo -e "  ${GREEN}✓${NC} OpenCode"
-        echo -e "\n${GREEN}✅ Done!${NC}"
+        echo -e "\n${GREEN}✅ 完成！${NC}"
         ;;
     3)
-        echo -e "\n${YELLOW}Select platforms (e.g. a b c):${NC}"
-        echo "  a) Claude Code  - project-level .claude/skills/"
-        echo "  b) Cursor       - project-level .cursor/skills/"
-        echo "  c) Windsurf     - project-level .windsurf/skills/"
-        echo "  d) OpenCode     - global ~/.opencode/skills/prompt-lab"
-        echo "  e) VSCode       - show install guide"
-        read -p "Choice [e.g. a b c]: " platforms
+        echo -e "\n${YELLOW}选择平台（输入编号，空格分隔）：${NC}"
+        echo "  a) Claude Code  - 项目级 .claude/skills/"
+        echo "  b) Cursor       - 项目级 .cursor/skills/"
+        echo "  c) Windsurf     - 项目级 .windsurf/skills/"
+        echo "  d) OpenCode     - 全局 ~/.opencode/skills/prompt-lab"
+        echo "  e) VSCode       - 显示安装说明"
+        read -p "选择 [例如: a b c]: " platforms
 
         for p in $platforms; do
             case "$p" in
@@ -86,42 +86,42 @@ case "$choice" in
                     echo -e "  ${GREEN}✓${NC} OpenCode"
                     ;;
                 e)
-                    echo -e "\n${YELLOW}VSCode Installation Guide:${NC}"
-                    echo "  Method 1: cp -r adapters/vscode ~/.vscode/extensions/prompt-lab-prd-generator"
-                    echo "  Method 2: cd adapters/vscode && npm install -g @vscode/vsce && vsce package && code --install-extension prompt-lab-prd-generator-1.0.0.vsix"
+                    echo -e "\n${YELLOW}VSCode 安装说明：${NC}"
+                    echo "  方式一: cp -r adapters/vscode ~/.vscode/extensions/prompt-lab-prd-generator"
+                    echo "  方式二: cd adapters/vscode && npm install -g @vscode/vsce && vsce package && code --install-extension prompt-lab-prd-generator-1.0.0.vsix"
                     ;;
             esac
         done
-        echo -e "\n${GREEN}✅ Done!${NC}"
+        echo -e "\n${GREEN}✅ 完成！${NC}"
         ;;
     4)
-        echo -e "\n${YELLOW}VSCode Installation Guide:${NC}"
+        echo -e "\n${YELLOW}VSCode 安装说明：${NC}"
         echo ""
-        echo "  Method 1 (copy directory):"
+        echo "  方式一（复制目录）:"
         echo "    cp -r adapters/vscode ~/.vscode/extensions/prompt-lab-prd-generator"
         echo ""
-        echo "  Method 2 (package + install):"
+        echo "  方式二（打包安装）:"
         echo "    cd adapters/vscode"
         echo "    npm install -g @vscode/vsce"
         echo "    vsce package"
         echo "    code --install-extension prompt-lab-prd-generator-1.0.0.vsix"
         echo ""
-        echo "  After install: restart VSCode, Ctrl+Shift+P -> 'Show PRD Generator Skills'"
+        echo "  安装后重启 VSCode，使用 Ctrl+Shift+P -> '显示 PRD 生成器技能库'"
         ;;
     5)
-        echo -e "\n${YELLOW}▶ Uninstalling...${NC}"
+        echo -e "\n${YELLOW}▶ 卸载...${NC}"
         [ -L .claude/skills ] && rm .claude/skills || true
         [ -L .cursor/skills ] && rm .cursor/skills || true
         [ -L .windsurf/skills ] && rm .windsurf/skills || true
         [ -L ~/.opencode/skills/prompt-lab ] && rm ~/.opencode/skills/prompt-lab || true
-        echo -e "${GREEN}✅ Done!${NC}"
+        echo -e "${GREEN}✅ 完成！${NC}"
         ;;
     6)
-        echo "Exiting."
+        echo "退出。"
         exit 0
         ;;
     *)
-        echo -e "${RED}Invalid choice. Run the script again.${NC}"
+        echo -e "${RED}无效选择，请重新运行。${NC}"
         exit 1
         ;;
 esac

@@ -4,151 +4,151 @@
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20OpenCode%20%7C%20VSCode-blue?style=flat-square)](https://github.com/timywel/prompt-lab)
 
-**作者 & 维护者**: [timywel](https://github.com/timywel)
+**Author & Maintainer**: [timywel](https://github.com/timywel)
 
 ---
 
-PRD Generator 是一套 AI 原生的产品需求文档（PRD）生成系统。它不是简单的模板填充工具，而是一套由 8 个专业技能组成的**智能协作网络**——从一句话需求到可执行 PRD，只需几轮对话。
+PRD Generator is an AI-native Product Requirements Document (PRD) generation system. It is not a simple template-filling tool, but a **smart collaboration network** composed of 8 specialized skills -- from a one-sentence idea to an executable PRD, in just a few rounds of conversation.
 
-## 项目能力
+## Project Capabilities
 
-### 核心能力矩阵
+### Core Capability Matrix
 
-| 能力维度 | 说明 |
-|---------|------|
-| **多入口接入** | 一句话想法 → 交钥匙 PRD；或多轮对话逐步澄清 |
-| **智能路由** | 自动分析需求复杂度，匹配最优生成策略 |
-| **深度扩展** | 架构设计 / UI/UX / 工程化 / 测试 / 边界条件 / 运维 |
-| **质量门禁** | 自动审查 PRD 常见缺陷，修复后输出质量报告 |
-| **专业评审** | 6 维度评审团（技术架构、产品设计、工程实现、可执行性、UI/UX、测试策略） |
-| **安全加固** | 威胁建模 / 隐私合规 / 数据加密 / API 鉴权 — 登录/支付/数据场景自动触发 |
-| **性能剖析** | 性能测试计划 / 平台工具指南 / 基准指标 / 回归检测 — 高性能场景自动触发 |
+| Capability | Description |
+|-----------|------|
+| **Multi-Entry Access** | One-sentence idea to turnkey PRD; or multi-round conversation for incremental clarification |
+| **Smart Routing** | Automatically analyzes requirement complexity and matches the optimal generation strategy |
+| **Deep Expansion** | Architecture design / UI/UX / Engineering / Testing / Edge cases / Operations |
+| **Quality Gate** | Automatically reviews common PRD defects and outputs a quality report after fixes |
+| **Professional Review** | 6-dimensional review panel (Technical Architecture, Product Design, Engineering Implementation, Executability, UI/UX, Testing Strategy) |
+| **Security Hardening** | Threat modeling / Privacy compliance / Data encryption / API authentication -- automatically triggered for login/payment/data scenarios |
+| **Performance Profiling** | Performance test plan / Platform tooling guide / Baseline metrics / Regression detection -- automatically triggered for high-performance scenarios |
 
-### 工作流示意
+### Workflow Diagram
 
 ```
-用户输入（一句话想法）
+User Input (One-sentence idea)
     │
     ▼
 ┌─────────────────┐
-│  Orchestrator   │ ← 智能路由：分析复杂度
-│  协调层         │
+│  Orchestrator   │ ← Smart Routing: Analyze complexity
+│  Coordinator    │
 └────────┬────────┘
          │
     ┌────┴────┬──────────┬──────────┐
     ▼         ▼          ▼          ▼
-Autofill  Conversational  Deep-Expand  （按需组合）
+Autofill  Conversational  Deep-Expand  (Combinations on demand)
     │         │             │
     └────┬────┴─────────────┘
          ▼
 ┌─────────────────┐
-│   PRD-QA        │ ← 质量门禁：审查 + 修复
-│   质检与修复    │
+│   PRD-QA        │ ← Quality Gate: Review + Fix
+│   QA & Fix      │
 └────────┬────────┘
          │
          ▼
 ┌─────────────────┐
-│  Review-Panel   │ ← 6维度评审团
-│  评审团         │
+│  Review-Panel   │ ← 6-Dimensional Review Panel
+│  Review Panel   │
 └────────┬────────┘
          │
-    可选触发 ▼
+    Optional trigger ▼
 ┌──────────────────┐  ┌──────────────────────┐
 │ Security-Analysis │  │ Performance-Profile │
-│ 安全分析          │  │ 性能剖析             │
+│ Security Analysis │  │ Performance Profile │
 └──────────────────┘  └──────────────────────┘
          │
          ▼
-   最终 PRD 文档
+   Final PRD Document
 ```
 
-### 技能一览
+### Skills Overview
 
-| 技能 | 触发场景 | 核心价值 |
+| Skill | Trigger Scenario | Core Value |
 |------|----------|----------|
-| `prd-autofill` | 快速启动 | 一句话进，详细 PRD 出 |
-| `prd-conversational` | 需求模糊 | 多轮引导，精准澄清 |
-| `prd-deep-expand` | 深度需求 | 6 维度全面扩展 |
-| `prd-orchestrator` | 通用入口 | 智能分析，自动路由 |
-| `prd-qa` | 质量把关 | 自动审查 + 修复 |
-| `prd-review-panel` | 评审阶段 | 6 维度综合评分 |
-| `prd-security-analysis` | 安全相关 | 威胁建模 / 合规 / 加密 |
-| `prd-performance-profile` | 性能相关 | 测试计划 / 基准指标 |
+| `prd-autofill` | Quick start | One sentence in, detailed PRD out |
+| `prd-conversational` | Vague requirements | Multi-round guidance, precise clarification |
+| `prd-deep-expand` | Deep requirements | Full 6-dimensional expansion |
+| `prd-orchestrator` | Universal entry | Smart analysis, automatic routing |
+| `prd-qa` | Quality gate | Auto review + fix |
+| `prd-review-panel` | Review stage | 6-dimensional comprehensive scoring |
+| `prd-security-analysis` | Security-related | Threat modeling / Compliance / Encryption |
+| `prd-performance-profile` | Performance-related | Test plan / Baseline metrics |
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 方式一：交互式安装（推荐）
+### Method 1: Interactive Installation (Recommended)
 ```bash
 ./install.sh
 ```
 
-### 方式二：Makefile 安装
+### Method 2: Makefile Installation
 ```bash
-# 安装核心平台（Claude Code + Cursor + Windsurf）
+# Install core platforms (Claude Code + Cursor + Windsurf)
 make install
 
-# 安装所有平台
+# Install all platforms
 make install-all
 
-# 安装特定平台
+# Install specific platform
 make install-claude   # Claude Code
 make install-cursor    # Cursor
 make install-windsurf  # Windsurf
-make install-opencode  # OpenCode（全局）
+make install-opencode  # OpenCode (global)
 ```
 
-## 支持的平台
+## Supported Platforms
 
-| 平台 | 安装方式 | 详情 |
-|------|----------|------|
-| Claude Code | `make install-claude` | 项目级 `.claude/skills/` |
-| Cursor | `make install-cursor` | 项目级 `.cursor/skills/` |
-| Windsurf | `make install-windsurf` | 项目级 `.windsurf/skills/` |
-| OpenCode | `make install-opencode` | 全局 `~/.opencode/skills/prompt-lab` |
-| VSCode | 手动安装 | 参考 `adapters/vscode/README.md` |
+| Platform | Installation | Details |
+|------|----------|----------|
+| Claude Code | `make install-claude` | Project-level `.claude/skills/` |
+| Cursor | `make install-cursor` | Project-level `.cursor/skills/` |
+| Windsurf | `make install-windsurf` | Project-level `.windsurf/skills/` |
+| OpenCode | `make install-opencode` | Global `~/.opencode/skills/prompt-lab` |
+| VSCode | Manual install | See `adapters/vscode/README.md` |
 
-## 项目结构
+## Project Structure
 
 ```
 prompt-lab/
-├── skills/                    # 规范技能源（所有平台共用）
-│   ├── _registry.yaml         # 技能注册表
-│   ├── _shared/               # 共享知识库
-│   │   ├── platform-configs/  # iOS/macOS 配置模板
-│   │   ├── qa-checks/         # 自检清单
-│   │   └── test-templates/    # 测试金字塔
-│   └── prd-*/                 # 8个技能模块
-├── adapters/                  # 各平台适配器
+├── skills/                    # Standardized skill source (shared across all platforms)
+│   ├── _registry.yaml         # Skill registry
+│   ├── _shared/               # Shared knowledge base
+│   │   ├── platform-configs/  # iOS/macOS configuration templates
+│   │   ├── qa-checks/         # Self-inspection checklists
+│   │   └── test-templates/    # Test pyramid
+│   └── prd-*/                 # 8 skill modules
+├── adapters/                  # Platform adapters
 │   ├── claude-code/          # Claude Code
 │   ├── cursor/               # Cursor
 │   ├── windsurf/             # Windsurf
 │   ├── opencode/             # OpenCode
-│   └── vscode/               # VSCode 扩展
-├── docs/                      # 项目文档（PRD/评审/规范）
-├── Makefile                   # 跨平台安装/卸载
-├── install.sh                 # 交互式安装脚本
+│   └── vscode/               # VSCode extension
+├── docs/                      # Project documentation (PRD/Review/Standards)
+├── Makefile                   # Cross-platform install/uninstall
+├── install.sh                 # Interactive installation script
 └── README.md
 ```
 
-## 卸载
+## Uninstall
 
 ```bash
 make uninstall
-# 或运行 ./install.sh 选择"卸载"
+# Or run ./install.sh and select "Uninstall"
 ```
 
-## 本地保留目录
+## Locally Preserved Directories
 
-以下目录包含本地集成文件，**不会**上传到仓库：
-- `tmp/` — 会话临时文件
-- `baize-loop/` — 本地集成
+The following directories contain local integration files and **will not** be uploaded to the repository:
+- `tmp/` -- Session temporary files
+- `baize-loop/` -- Local integration
 
-## 相关文档
+## Related Documentation
 
-- [Claude Code 适配器](adapters/claude-code/README.md)
-- [Cursor 适配器](adapters/cursor/README.md)
-- [Windsurf 适配器](adapters/windsurf/README.md)
-- [OpenCode 适配器](adapters/opencode/INSTALL.md)
-- [VSCode 适配器](adapters/vscode/README.md)
+- [Claude Code Adapter](adapters/claude-code/README.md)
+- [Cursor Adapter](adapters/cursor/README.md)
+- [Windsurf Adapter](adapters/windsurf/README.md)
+- [OpenCode Adapter](adapters/opencode/INSTALL.md)
+- [VSCode Adapter](adapters/vscode/README.md)

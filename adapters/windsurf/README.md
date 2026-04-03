@@ -1,28 +1,28 @@
-# Windsurf 适配器
+# Windsurf Adapter
 
-本适配器将根目录 `skills/` 符号链接到 Windsurf 的项目级 skills 目录。
+This adapter symlinks the root `skills/` directory to Windsurf's project-level skills directory.
 
-## 安装方式
+## Installation
 
-### 自动安装（推荐）
+### Automatic (Recommended)
 ```bash
 cd prompt-lab
 make install-windsurf
-# 或
+# or
 ./adapters/windsurf/install.sh
 ```
 
-### 手动安装
+### Manual
 ```bash
 mkdir -p .windsurf
 ln -sfn ../skills .windsurf/skills
 ```
 
-## 工作原理
+## How It Works
 
-Windsurf 使用与 Claude Code 兼容的 skill 格式。
-通过符号链接共享 `skills/` 目录，实现跨平台技能同步。
+Windsurf uses a skill format compatible with Claude Code.
+Symlinking the shared `skills/` directory enables cross-platform skill sync.
 
-## 验证安装
+## Verify Installation
 
-安装后，在 Windsurf 中触发 skill 命令验证加载。
+After installation, trigger a skill command in Windsurf to verify loading.
