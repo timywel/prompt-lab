@@ -74,16 +74,16 @@ flowchart LR
 
 ## 2. Project Capabilities
 
-### Capability Radar
+### Capability Coverage
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#e1f5fe', 'axisLabelColor': '#37474f'}}}%%
-xychart-beta
-    title "PRD Generator Capability Coverage"
-    x-axis [ "Multi-Entry", "Smart Routing", "Deep Expand", "Quality Gate", "Review", "Security", "Performance" ]
-    y-axis "Coverage" 0 --> 100
-    bar [95, 90, 85, 92, 88, 80, 75]
-    line [95, 90, 85, 92, 88, 80, 75]
+```
+Multi-Entry     ████████████░ 95%
+Smart-Routing   ██████████░░░ 90%
+Deep-Expand     █████████░░░░ 85%
+Quality-Gate    ██████████░░░ 92%
+Review-Panel    █████████░░░░ 88%
+Security        ████████░░░░░ 80%
+Performance     ███████░░░░░░ 75%
 ```
 
 | Capability | Description |
@@ -329,11 +329,31 @@ stateDiagram-v2
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#fce4ec'}}}%%
-xychart-beta
-    title "PRD Quality Scorecard (13 Dimensions)"
-    x-axis [ "Placeholder", "Config Files", "API Accuracy", "Animation", "Quant Params", "Test Strategy", "CI/CD Syntax", "Accessibility", "Platform Match", "Edge Cases", "Self-Review", "Tech Stack", "KB Reuse" ]
-    y-axis "Score" 0 --> 100
-    bar [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+gantt
+    title "PRD Quality Gate - 13 Audit Dimensions"
+    dateFormat X
+    axisFormat %s
+
+    section Scanning
+    Placeholder Scan        :done, p1, 0, 8
+    Config Files Check      :done, p2, 8, 16
+    API Accuracy Verify     :done, p3, 16, 24
+    Animation Conflicts     :done, p4, 24, 32
+
+    section Filling
+    Quant Params           :done, p5, 32, 40
+    Test Strategy          :done, p6, 40, 48
+    CI/CD Syntax           :done, p7, 48, 56
+
+    section Validating
+    Accessibility          :done, p8, 56, 64
+    Platform Consistency   :done, p9, 64, 72
+    Edge Cases Coverage    :done, p10, 72, 80
+
+    section Reporting
+    Self-Review Checklist  :done, p11, 80, 88
+    Tech Stack Coverage    :done, p12, 88, 96
+    KB Reuse Check         :done, p13, 96, 100
 ```
 
 | # | Dimension | Auto-Action if Missing |
