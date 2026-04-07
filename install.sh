@@ -40,30 +40,39 @@ echo ""
 
 read -p "Choice [1-6]: " choice
 
+# Safe symlink: removes existing file/dir/symlink before creating
+safe_link() {
+    local link="$1"
+    local target="$2"
+    local dir
+    dir="$(dirname "$link")"
+    mkdir -p "$dir"
+    ([ -L "$link" ] && rm "$link") || ([ -d "$link" ] && rm -rf "$link") || true
+    ln -sfn "$target" "$link"
+}
+
 do_install() {
     local name="$1"
     local dir="$2"
-    local target="$3"
-    [ -d "$dir/skills" ] && [ ! -L "$dir/skills" ] && rm -rf "$dir/skills" || true
-    mkdir -p "$dir" && ln -sfn "$target" "$dir/skills"
+    local rel_target="$3"
+    safe_link "$dir/skills" "$rel_target"
     echo -e "  ${GREEN}✓${NC} $name"
 }
 
 case "$choice" in
     1)
         echo -e "\n${BLUE}▶ Installing core platforms...${NC}"
-        do_install "Claude Code" ".claude" "$(pwd)/skills"
-        do_install "Cursor" ".cursor" "$(pwd)/skills"
-        do_install "Windsurf" ".windsurf" "$(pwd)/skills"
+        do_install "Claude Code" ".claude" "../skills"
+        do_install "Cursor" ".cursor" "../skills"
+        do_install "Windsurf" ".windsurf" "../skills"
         echo -e "\n${GREEN}✅ Done!${NC}"
         ;;
     2)
         echo -e "\n${BLUE}▶ Full install...${NC}"
-        do_install "Claude Code" ".claude" "$(pwd)/skills"
-        do_install "Cursor" ".cursor" "$(pwd)/skills"
-        do_install "Windsurf" ".windsurf" "$(pwd)/skills"
-        [ -d ~/.opencode/skills/prompt-lab ] && [ ! -L ~/.opencode/skills/prompt-lab ] && rm -rf ~/.opencode/skills/prompt-lab || true
-        mkdir -p ~/.opencode/skills && ln -sfn "$(pwd)/skills" ~/.opencode/skills/prompt-lab
+        do_install "Claude Code" ".claude" "../skills"
+        do_install "Cursor" ".cursor" "../skills"
+        do_install "Windsurf" ".windsurf" "../skills"
+        safe_link ~/.opencode/skills/prompt-lab "$PWD"
         echo -e "  ${GREEN}✓${NC} OpenCode"
         echo -e "\n${GREEN}✅ Done!${NC}"
         ;;
@@ -78,11 +87,12 @@ case "$choice" in
 
         for p in $platforms; do
             case "$p" in
-                a) do_install "Claude Code" ".claude" "$(pwd)/skills" ;;
-                b) do_install "Cursor" ".cursor" "$(pwd)/skills" ;;
-                c) do_install "Windsurf" ".windsurf" "$(pwd)/skills" ;;
+                a) do_install "Claude Code" ".claude" "../skills" ;;
+                b) do_install "Cursor" ".cursor" "../skills" ;;
+                c) do_install "Windsurf" ".windsurf" "../skills" ;;
                 d)
-                    mkdir -p ~/.opencode/skills && ln -sfn "$(pwd)/skills" ~/.opencode/skills/prompt-lab
+                    mkdir -p ~/.opencode/skills
+                    safe_link ~/.opencode/skills/prompt-lab "$PWD"
                     echo -e "  ${GREEN}✓${NC} OpenCode"
                     ;;
                 e)
@@ -110,10 +120,10 @@ case "$choice" in
         ;;
     5)
         echo -e "\n${YELLOW}▶ Uninstalling...${NC}"
-        [ -L .claude/skills ] && rm .claude/skills || true
-        [ -L .cursor/skills ] && rm .cursor/skills || true
-        [ -L .windsurf/skills ] && rm .windsurf/skills || true
-        [ -L ~/.opencode/skills/prompt-lab ] && rm ~/.opencode/skills/prompt-lab || true
+        ([ -L .claude/skills ] && rm .claude/skills) || ([ -d .claude/skills ] && rm -rf .claude/skills) || true
+        ([ -L .cursor/skills ] && rm .cursor/skills) || ([ -d .cursor/skills ] && rm -rf .cursor/skills) || true
+        ([ -L .windsurf/skills ] && rm .windsurf/skills) || ([ -d .windsurf/skills ] && rm -rf .windsurf/skills) || true
+        ([ -L ~/.opencode/skills/prompt-lab ] && rm ~/.opencode/skills/prompt-lab) || true
         echo -e "${GREEN}✅ Done!${NC}"
         ;;
     6)

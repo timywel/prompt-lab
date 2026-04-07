@@ -12,3 +12,8 @@ baize-loop/
 # 构建产物
 *.zip
 *.vsix
+
+# 安装产生的符号链接（由 make install / install.sh 创建）
+.claude/skills
+.cursor/skills
+.windsurf/skills
