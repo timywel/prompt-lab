@@ -35,6 +35,9 @@ make install-vscode
 由于 VSCode 原生不支持 Claude Code 风格的 skill 系统，
 本适配器通过 WebView 命令面板提供技能浏览功能。
 
+**入口点**：与 Claude Code 配合使用时，所有 PRD 生成请求首先被
+`prd-dispatcher` 捕获，分析复杂度后与您确认路由方案，再委托给对应技能执行。
+
 ## 技能展示
 
 扩展会读取 `skills/` 目录下的所有技能文件夹，

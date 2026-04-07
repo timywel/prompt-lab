@@ -35,6 +35,10 @@ This extension is **content-display focused**, enabling quick skill documentatio
 Since VSCode does not natively support the Claude Code-style skill system,
 this adapter provides skill browsing via WebView command palette.
 
+**Entry Point**: When used with Claude Code, all PRD generation requests are
+first captured by the `prd-dispatcher`, which analyzes complexity and confirms
+the routing strategy with you before delegating to the appropriate skill.
+
 ## Skill Display
 
 The extension reads all skill folders under the `skills/` directory,

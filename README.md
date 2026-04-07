@@ -17,12 +17,18 @@ PRD Generator is an AI-native Product Requirements Document (PRD) generation sys
 ```
                     ┌─────────────────────────────────────────────────┐
                     │                  USER INPUT                     │
-                    │           (one-sentence idea)                   │
+                    │       (e.g. "帮我生成一个三国斗地主PRD")          │
                     └──────────────────────┬────────────────────────┘
                                            │
                                            ▼
                     ┌─────────────────────────────────────────────────┐
-                    │              ORCHESTRATOR                        │
+                    │            PRD-DISPATCHER                       │
+                    │    (Analyze + Confirm Route)                    │
+                    └──────────────────────┬────────────────────────┘
+                                           │
+                                           ▼
+                    ┌─────────────────────────────────────────────────┐
+                    │              ORCHESTRATOR                       │
                     │          (Smart Routing)                       │
                     └──────────────────────┬────────────────────────┘
                                            │
@@ -54,7 +60,7 @@ PRD Generator is an AI-native Product Requirements Document (PRD) generation sys
                     └─────────────────────────────────────────────────┘
 ```
 
-**Color legend**: Orange = Router  |  Green = Core Gen  |  Pink = QA  |  Purple = Review  |  Cyan = Analysis
+**Color legend**: Orange = Router/Dispatcher  |  Green = Core Gen  |  Pink = QA  |  Purple = Review  |  Cyan = Analysis
 
 ---
 
@@ -195,8 +201,13 @@ Performance     ███████░░░░░░ 75%
  └──────────────────────────────────────────────────────────────────────────────┘
 
                     ┌──────────────────┐
-                    │   Orchestrator   │  ◄── Universal entry point
-                    │   (Router)        │
+                    │   Dispatcher     │  ◄── Universal entry point (all PRD requests)
+                    │   (Router)       │
+                    └────────┬─────────┘
+                             │
+                    ┌────────▼─────────┐
+                    │  Orchestrator   │  ◄── Chained execution (A→B→C)
+                    │  (Coordinator)   │
                     └────────┬─────────┘
                              │
          ┌───────────────────┼───────────────────┐
@@ -337,9 +348,43 @@ Performance     ███████░░░░░░ 75%
 
 ---
 
-### 4.3 prd-orchestrator: Complexity Decision Tree
+### 4.3 prd-dispatcher: Complexity Analysis & Routing Confirmation
 
-*(See section 3.1 above for the full decision tree)*
+```
+ ┌──────────────────────────────────────────────────────────────────────────────┐
+ │                      PRD DISPATCHER - ROUTING CONFIRMATION                  │
+ └──────────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+  │     💬       │    │      1       │    │      2       │    │      3       │
+  │    INPUT    │───▶│   Analyze    │───▶│   Confirm    │───▶│   Delegate   │
+  │"帮我生成PRD" │    │  Complexity  │    │    Route     │    │   Skill     │
+  └──────────────┘    └──────┬───────┘    └──────┬───────┘    └──────┬───────┘
+                               │                      │                  │
+                               ▼                      ▼                  ▼
+                     ┌──────────────┐        ┌──────────────┐    ┌──────────────┐
+                     │   4 Types    │        │  Options:   │    │ prd-autofill │
+                     │ Simple/Exist. │        │  A / B / C  │    │prd-convers. │
+                     │ Complex/Uncert.      │  [User picks]│    │prd-deep-expand│
+                     └──────────────┘        └──────────────┘    └──────────────┘
+
+  Routing table:
+
+  | Type       | Characteristics                        | Route              |
+  |------------|---------------------------------------|--------------------|
+  | **Simple** | < 100 chars, single feature           | prd-autofill       |
+  | **Existing** | User provides text or file path     | prd-deep-expand    |
+  | **Complex** | > 200 chars, multiple features        | prd-conversational |
+  | **Uncertain** | Vague description                  | prd-conversational |
+
+  **Critical**: Never auto-decide. Always confirm routing with user first.
+```
+
+**Trigger**: Say `"帮我生成PRD"` or `"生成PRD"` (captures all PRD requests)
+
+---
+
+### 4.4 prd-orchestrator: Chained Execution
 
 | Input Type | Characteristics | Route |
 |------------|----------------|-------|
@@ -416,10 +461,11 @@ Performance     ███████░░░░░░ 75%
 
 | Skill | Trigger Scenario | Core Value |
 |------|----------|----------|
+| `prd-dispatcher` | Universal entry | Analyzes complexity, confirms routing with user |
 | `prd-autofill` | Quick start | One sentence in, detailed PRD out |
 | `prd-conversational` | Vague requirements | Multi-round guidance, precise clarification |
 | `prd-deep-expand` | Deep requirements | Full 6-dimensional expansion |
-| `prd-orchestrator` | Universal entry | Smart analysis, automatic routing |
+| `prd-orchestrator` | Chained execution | Route A→B→C in sequence |
 | `prd-qa` | Quality gate | Auto review + fix |
 | `prd-review-panel` | Review stage | 6-dimensional comprehensive scoring |
 | `prd-security-analysis` | Security-related | Threat modeling / Compliance / Encryption |

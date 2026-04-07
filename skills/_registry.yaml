@@ -1,8 +1,14 @@
 skills:
+  - name: prd-dispatcher
+    path: prd-dispatcher
+    description: "PRD 生成顶层调度器：捕获所有 PRD 生成请求，分析复杂度并确认路由方案后委托执行"
+    trigger: prd
+    version: "1.0.0"
+
   - name: prd-autofill
     path: prd-autofill
     description: "全自动 PRD 生成器：输入一句话想法，自动补全技术细节，输出可执行 PRD"
-    trigger: prd
+    trigger: prd-autofill
     version: "1.0.0"
 
   - name: prd-conversational
