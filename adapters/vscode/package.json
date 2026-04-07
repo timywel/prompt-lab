@@ -2,7 +2,7 @@
   "name": "prompt-lab-prd-generator",
   "displayName": "PRD Generator Skills",
   "version": "1.0.0",
-  "description": "PRD生成器技能库参考手册",
+  "description": "PRD Generator skill library reference manual",
   "engines": {
     "vscode": "^1.94.0"
   },
@@ -11,12 +11,7 @@
   "contributes": {
     "commands": [{
       "command": "prompt-lab.showSkills",
-      "title": "显示 PRD 生成器技能库"
-    }],
-    "webviewPanels": [{
-      "id": "prompt-lab.skills",
-      "title": "PRD Skills",
-      "icon": "icon.png"
+      "title": "Show PRD Generator Skills"
     }]
   }
 }
